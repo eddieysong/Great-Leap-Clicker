@@ -19,9 +19,9 @@ public class UIController : MonoBehaviour {
 	private GameObject viewportContent;
 
 	// config variables
-	private float initialXPos = 500f;
-	private float initialYPos = -100f;
-	private float panelHeight = 200f;
+	private double initialXPos = 500f;
+	private double initialYPos = -100f;
+	private double panelHeight = 200f;
 
 	// Use this for initialization
 	void Start () {
@@ -34,9 +34,9 @@ public class UIController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		totalDisplay.text = gameController.totalFood.ToString("F2");
-		perClickDisplay.text = gameController.foodPerClick.ToString("F2");
-		perSecDisplay.text = gameController.foodPerSecond.ToString("F2");
+		totalDisplay.text = gameController.NumberFormat(gameController.totalFood);
+		perClickDisplay.text = gameController.NumberFormat(gameController.foodPerClick);
+		perSecDisplay.text = gameController.NumberFormat(gameController.foodPerSecond);
 	}
 
 //	public void UpdateNumbers () {

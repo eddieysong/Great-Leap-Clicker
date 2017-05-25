@@ -20,16 +20,18 @@ public class PanelController : MonoBehaviour
 	public int level;
 	public string upgradeName;
 	public string description;
-	public float baseCost = 5f;
-	public float increasePerLevel = 1f;
+	public double baseCost = 5f;
+	public double increasePerLevel = 1f;
 
 	// upgrade cost follows the formula: Y = baseCost * (1 + costPercentIncreasePerLevel) ^ currentLevel
 	// this is A
-	//	public float flatIncreasePerLevel = 1f;
+	//	public double flatIncreasePerLevel = 1f;
 	// this is B
-	public float costPercentIncreasePerLevel = 0.05f;
+	public double costPercentIncreasePerLevel = 0.05f;
 	// this is C
-	//	public float expFactorPerLevel = 1.02f;
+	//	public double expFactorPerLevel = 1.02f;
+
+	public double currentCost;
 
 	// Use this for initialization
 	void Start ()
@@ -48,14 +50,19 @@ public class PanelController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		
+		if (gameController.totalFood >= currentCost) {
+			button.interactable = true;
+		} else {
+			button.interactable = false;
+		}
 	}
 
 	void RefreshPanelText ()
 	{
+		CalcCurrentCost ();
 		SetTitle (upgradeName + " - Level " + level);
-		SetBody (description + "\nIncreases production by " + increasePerLevel.ToString ("F2") + ((id == 0) ? "/Click" : "/Second"));
-		SetButtonText ("BUY\n" + GetCurrentCost ().ToString ("F0"));
+		SetBody (description + "\nProduction: " + gameController.NumberFormat(increasePerLevel) + ((id == 0) ? "/Click" : "/Second"));
+		SetButtonText ("BUY\n" + gameController.NumberFormat(currentCost));
 	}
 
 	public void SetImage ()
@@ -80,8 +87,8 @@ public class PanelController : MonoBehaviour
 
 	public void ButtonClick ()
 	{
-		if (gameController.totalFood >= GetCurrentCost ()) {
-			gameController.totalFood -= GetCurrentCost ();
+		if (gameController.totalFood >= currentCost) {
+			gameController.totalFood -= currentCost;
 			level++;
 			if (id == 0) {
 				gameController.foodPerClick += increasePerLevel;
@@ -92,12 +99,12 @@ public class PanelController : MonoBehaviour
 		}
 	}
 
-	public float GetCurrentCost ()
+	public void CalcCurrentCost ()
 	{
 		if (id == 0) {
-			return Mathf.Floor (Mathf.Min (baseCost + level, 20) * Mathf.Pow (1 + costPercentIncreasePerLevel, level));
+			currentCost = System.Math.Floor (System.Math.Min (baseCost + level, 20) * System.Math.Pow (1 + costPercentIncreasePerLevel, level));
 		} else {
-			return Mathf.Floor (baseCost * Mathf.Pow (1 + costPercentIncreasePerLevel, level));
+			currentCost = System.Math.Floor (baseCost * System.Math.Pow (1 + costPercentIncreasePerLevel, level));
 		}
 	}
 }
