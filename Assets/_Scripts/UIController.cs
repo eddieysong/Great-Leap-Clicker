@@ -35,8 +35,8 @@ public class UIController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		totalDisplay.text = gameController.NumberFormat(gameController.totalFood);
-		perClickDisplay.text = gameController.NumberFormat(gameController.foodPerClick);
-		perSecDisplay.text = gameController.NumberFormat(gameController.foodPerSecond);
+		perClickDisplay.text = gameController.NumberFormat(gameController.foodPerClick * gameController.totalMultiplier);
+		perSecDisplay.text = gameController.NumberFormat(gameController.foodPerSecond * gameController.totalMultiplier);
 	}
 
 //	public void UpdateNumbers () {

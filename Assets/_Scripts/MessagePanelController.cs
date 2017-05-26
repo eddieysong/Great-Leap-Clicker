@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelController : MonoBehaviour
-{
+public class MessagePanelController : MonoBehaviour {
+	
 	// handles to other controllers
 	private GameController gameController;
 
@@ -14,6 +14,7 @@ public class PanelController : MonoBehaviour
 	private Text body;
 	private Button button;
 	private Text buttonText;
+	private Button outside;
 
 	// upgrade properties
 	public int id;
@@ -41,28 +42,23 @@ public class PanelController : MonoBehaviour
 		title = transform.Find ("Title").GetComponent<Text> ();
 		body = transform.Find ("Body").GetComponent<Text> ();
 		button = transform.Find ("Button").GetComponent<Button> ();
+		outside = transform.Find ("Outside").GetComponent<Button> ();
 		buttonText = button.transform.Find ("Text").GetComponent<Text> ();
 		button.onClick.AddListener (ButtonClick);
+		outside.onClick.AddListener (OutsideClick);
 
 		RefreshPanelText ();
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{
-		if (gameController.totalFood >= currentCost) {
-			button.interactable = true;
-		} else {
-			button.interactable = false;
-		}
+
 	}
 
 	public void RefreshPanelText ()
 	{
-		CalcCurrentCost ();
-		SetTitle (upgradeName + " - Level " + level);
-		SetBody (description + "\nProduction: " + gameController.NumberFormat(increasePerLevel * gameController.totalMultiplier) + ((id == 0) ? "/Click" : "/Second"));
-		SetButtonText ("BUY\n" + gameController.NumberFormat(currentCost));
+
 	}
 
 	public void SetImage ()
@@ -87,24 +83,14 @@ public class PanelController : MonoBehaviour
 
 	public void ButtonClick ()
 	{
-		if (gameController.totalFood >= currentCost) {
-			gameController.totalFood -= currentCost;
-			level++;
-			if (id == 0) {
-				gameController.foodPerClick += increasePerLevel;
-			} else {
-				gameController.foodPerSecond += increasePerLevel;
-			}
-			RefreshPanelText ();
-		}
+		// what happens when the button is clicked
+		Debug.Log ("ok");
 	}
 
-	public void CalcCurrentCost ()
+	public void OutsideClick ()
 	{
-		if (id == 0) {
-			currentCost = System.Math.Floor (System.Math.Min (baseCost + level, 20) * System.Math.Pow (1 + costPercentIncreasePerLevel, level));
-		} else {
-			currentCost = System.Math.Floor (baseCost * System.Math.Pow (1 + costPercentIncreasePerLevel, level));
-		}
+		Debug.Log ("outside");
+		gameObject.SetActive (false);
 	}
+
 }
