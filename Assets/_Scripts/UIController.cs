@@ -18,6 +18,9 @@ public class UIController : MonoBehaviour {
 	private Text perSecDisplay;
 	private GameObject viewportContent;
 
+	private Text redBookDisplay;
+	private Text diamondDisplay;
+
 	// config variables
 	private double initialXPos = 500f;
 	private double initialYPos = -100f;
@@ -30,18 +33,26 @@ public class UIController : MonoBehaviour {
 		perClickDisplay = GameObject.Find ("PerClick Display").GetComponent<Text> ();
 		perSecDisplay = GameObject.Find ("PerSec Display").GetComponent<Text> ();
 		viewportContent = GameObject.Find ("Viewport/Content");
+		redBookDisplay = GameObject.Find ("Top Panel/Red Book Display").GetComponent<Text> ();
+		diamondDisplay= GameObject.Find ("Top Panel/Diamond Display").GetComponent<Text> ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		totalDisplay.text = gameController.NumberFormat(gameController.totalFood);
-		perClickDisplay.text = gameController.NumberFormat(gameController.foodPerClick * gameController.totalMultiplier);
-		perSecDisplay.text = gameController.NumberFormat(gameController.foodPerSecond * gameController.totalMultiplier);
+		totalDisplay.text = gameController.FormatDouble(gameController.TotalFood);
+		perClickDisplay.text = gameController.FormatDouble(gameController.FoodPerClick * gameController.TotalMultiplier);
+		perSecDisplay.text = gameController.FormatDouble(gameController.FoodPerSecond * gameController.TotalMultiplier);
+		redBookDisplay.text = gameController.FormatLong(gameController.NumRedBooks);
+		diamondDisplay.text = "0";
 	}
 
-//	public void UpdateNumbers () {
-//		
-//	}
+	public void UpdateAllPanels () {
+		// updates all panels
+		foreach (PanelController panel in GameObject.Find("Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+			panel.RefreshPanel ();
+		}
+	}
 //
 //	public void AddPanel (int id) {
 //		GameObject newPanel = Instantiate (panelPrefab);

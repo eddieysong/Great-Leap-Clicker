@@ -6,12 +6,12 @@ public class GameController : MonoBehaviour
 {
 
 	// game logic variables
-	public double totalFood = 0f;
-	public double foodPerClick = 1.0f;
-	public double foodPerSecond = 0f;
+	private double totalFood = 0f;
+	private double foodPerClick = 1.0f;
+	private double foodPerSecond = 0f;
 
-	public long numRedBooks = 0;
-	public double totalMultiplier = 1.0;
+	private long numRedBooks = 0;
+	private double totalMultiplier = 1.0;
 
 	// configuration variables
 
@@ -22,11 +22,8 @@ public class GameController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-
 		// store handles to other objects
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
-
-
 
 	}
 	
@@ -42,8 +39,16 @@ public class GameController : MonoBehaviour
 			totalFood += 1000000;
 		}
 
-		if (Input.GetKey (KeyCode.U)) {
-			IncreaseRedBooks (1000000000000);
+		if (Input.GetKeyDown (KeyCode.O)) {
+			IncreaseRedBooks (100);
+		}
+
+		if (Input.GetKeyDown (KeyCode.I)) {
+			IncreaseRedBooks (1000000);
+		}
+
+		if (Input.GetKeyDown (KeyCode.U)) {
+			IncreaseRedBooks (long.MaxValue);
 		}
 
 	}
@@ -53,9 +58,25 @@ public class GameController : MonoBehaviour
 		totalFood += foodPerClick * totalMultiplier;
 	}
 
-	public void IncreaseFoodPerSec (double amount)
+	public void SpendFood (double cost)
 	{
-		foodPerSecond += amount;
+		totalFood -= cost;
+	}
+
+	public void UpdateIncome()
+	{
+		// reset income numbers to be tallied again
+		foodPerClick = 1;
+		foodPerSecond = 0;
+
+		// updates all panels
+		foreach (PanelController panel in GameObject.Find("Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+			if (panel.Id == 0) {
+				foodPerClick += panel.CurrentProduction;
+			} else {
+				foodPerSecond += panel.CurrentProduction;
+			}
+		}
 	}
 
 	// each red book increases production by 10%, stacks additively
@@ -63,9 +84,7 @@ public class GameController : MonoBehaviour
 	{
 		numRedBooks += amount;
 		CalcTotalMultiplier ();
-		foreach (PanelController panel in GameObject.Find("Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
-			panel.RefreshPanelText ();
-		}
+		uiController.UpdateAllPanels ();
 	}
 
 	// updates the total multiplier
@@ -77,7 +96,7 @@ public class GameController : MonoBehaviour
 	}
 
 	// takes a double and returns a simplified string representation
-	public string NumberFormat (double number)
+	public string FormatDouble (double number)
 	{
 		if (number < 1000) {
 			return number.ToString ("F2") + " kg";
@@ -99,9 +118,59 @@ public class GameController : MonoBehaviour
 			return (number / 1000000000000000000000000.0).ToString ("F2") + " Zt";
 		} else if (number < 1000000000000000000000000000000.0) {
 			return (number / 1000000000000000000000000000.0).ToString ("F2") + " Yt";
+		} else if (number < System.Math.Pow (10, 300)) {
+			return number.ToString ("0.00e0");
 		} else {
 			return "1*";
 		}
+	}
 
+	// takes a double and returns a simplified string representation
+	public string FormatLong (long number)
+	{
+		if (number < 1000) {
+			return number.ToString ("F0");
+		} else if (number < 1000000) {
+			return ((double)number / 1000).ToString ("F2") + " K";
+		} else if (number < 1000000000) {
+			return ((double)number / 1000000).ToString ("F2") + " M";
+		} else if (number < 1000000000000) {
+			return ((double)number / 1000000000).ToString ("F2") + " B";
+		} else if (number < 1000000000000000) {
+			return ((double)number / 1000000000000).ToString ("F2") + " T";
+		} else {
+			return number.ToString ("0.00e0");
+		}
+	}
+
+	// Setters and getters
+	public double TotalFood {
+		get {
+			return this.totalFood;
+		}
+	}
+
+	public double FoodPerClick {
+		get {
+			return this.foodPerClick;
+		}
+	}
+
+	public double FoodPerSecond {
+		get {
+			return this.foodPerSecond;
+		}
+	}
+
+	public long NumRedBooks {
+		get {
+			return this.numRedBooks;
+		}
+	}
+
+	public double TotalMultiplier {
+		get {
+			return this.totalMultiplier;
+		}
 	}
 }
