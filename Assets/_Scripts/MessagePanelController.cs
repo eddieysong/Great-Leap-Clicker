@@ -7,6 +7,7 @@ public class MessagePanelController : MonoBehaviour {
 	
 	// handles to other controllers
 	private GameController gameController;
+	private Animator animator;
 
 	// handles to UI elements displayed
 	private Image icon;
@@ -38,6 +39,7 @@ public class MessagePanelController : MonoBehaviour {
 	void Start ()
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		animator = GetComponent<Animator> ();
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
 		body = transform.Find ("Body").GetComponent<Text> ();
@@ -47,13 +49,16 @@ public class MessagePanelController : MonoBehaviour {
 		button.onClick.AddListener (ButtonClick);
 		outside.onClick.AddListener (OutsideClick);
 
+
 		RefreshPanelText ();
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (Input.GetKeyDown (KeyCode.T)) {
+			PopUp ();
+		}
 	}
 
 	public void RefreshPanelText ()
@@ -83,14 +88,26 @@ public class MessagePanelController : MonoBehaviour {
 
 	public void ButtonClick ()
 	{
-		// what happens when the button is clicked
-		Debug.Log ("ok");
+		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
+			Debug.Log ("ok");
+			FadeOut ();
+		}
 	}
 
 	public void OutsideClick ()
 	{
-		Debug.Log ("outside");
-		gameObject.SetActive (false);
+		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
+			Debug.Log ("outside");
+			FadeOut ();
+		}
+	}
+
+	private void PopUp() {
+		animator.SetTrigger ("Show");
+	}
+
+	private void FadeOut() {
+		animator.SetTrigger ("Hide");
 	}
 
 }

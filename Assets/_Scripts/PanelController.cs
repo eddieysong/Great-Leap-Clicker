@@ -121,7 +121,7 @@ public class PanelController : MonoBehaviour
 
 	// every 25 levels increase production by 2x, every 100 levels = 10x, every 1000 levels = 100x
 	public void CalcCurrentProduction() {
-		currentProduction = increasePerLevel * level * Mathf.Pow (2, (level / 25)) * Mathf.Pow (10, (level / 100)) * Mathf.Pow (100, (level / 1000));
+		currentProduction = increasePerLevel * level * System.Math.Pow (2, (level / 25)) * System.Math.Pow (10, (level / 100)) * System.Math.Pow (100, (level / 1000));
 		Debug.Log (CurrentProduction);
 	}
 
