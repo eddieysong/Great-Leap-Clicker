@@ -11,12 +11,12 @@ public class UIController : MonoBehaviour {
 
 	// handles to other controllers
 	private GameController gameController;
+	private PanelController[] upgradePanels;
 
 	// handles to UI elements displayed
 	private Text totalDisplay;
 	private Text perClickDisplay;
 	private Text perSecDisplay;
-	private GameObject viewportContent;
 
 	private Text redBookDisplay;
 	private Text diamondDisplay;
@@ -29,12 +29,13 @@ public class UIController : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController> ();
 		totalDisplay = GameObject.Find ("Total Display").GetComponent<Text> ();
 		perClickDisplay = GameObject.Find ("PerClick Display").GetComponent<Text> ();
 		perSecDisplay = GameObject.Find ("PerSec Display").GetComponent<Text> ();
-		viewportContent = GameObject.Find ("Viewport/Content");
 		redBookDisplay = GameObject.Find ("Top Panel/Red Book Display").GetComponent<Text> ();
 		diamondDisplay= GameObject.Find ("Top Panel/Diamond Display").GetComponent<Text> ();
+
 
 	}
 	
@@ -49,7 +50,7 @@ public class UIController : MonoBehaviour {
 
 	public void UpdateUpgradePanels () {
 		// updates all panels
-		foreach (PanelController panel in GameObject.Find("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+		foreach (PanelController panel in upgradePanels) {
 			panel.RefreshPanel ();
 		}
 	}

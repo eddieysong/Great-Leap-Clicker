@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // dependencies for saving and loading
 using System;
@@ -11,12 +12,13 @@ public class GameController : MonoBehaviour
 {
 
 	// game logic variables
-	private double totalFood = 0f;
-	private double foodPerClick = 1.0f;
-	private double foodPerSecond = 0f;
+	private double totalFood = 0;
+	private double totalSpent = 0;
+	private double foodPerClick = 1;
+	private double foodPerSecond = 0;
 
 	private long numRedBooks = 0;
-	private double totalMultiplier = 1.0;
+	private double totalMultiplier = 1;
 
 	// configuration variables
 	private bool autoSaveEnabled = true;
@@ -25,6 +27,7 @@ public class GameController : MonoBehaviour
 
 	// handles to other controllers
 	private UIController uiController;
+	private PanelController[] upgradePanels;
 
 
 
@@ -32,6 +35,7 @@ public class GameController : MonoBehaviour
 	{
 		// store handles to other objects
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
+		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController> ();
 	}
 
 	void Start()
@@ -52,7 +56,7 @@ public class GameController : MonoBehaviour
 //		Debug.Log ("total food: " + FormatDouble(totalFood));
 
 		if (Input.GetKey (KeyCode.P)) {
-			totalFood += 1000000;
+			Debug.Log(CalcRedBooksGained () .ToString());
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
@@ -89,6 +93,7 @@ public class GameController : MonoBehaviour
 	public void SpendFood (double cost)
 	{
 		totalFood -= cost;
+		totalSpent += cost;
 	}
 
 	public void UpdateIncome()
@@ -98,7 +103,7 @@ public class GameController : MonoBehaviour
 		foodPerSecond = 0;
 
 		// updates based on info from all panels
-		foreach (PanelController panel in GameObject.Find("Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+		foreach (PanelController panel in upgradePanels) {
 			if (panel.Id == 0) {
 				foodPerClick += panel.CurrentProduction;
 			} else {
@@ -115,7 +120,7 @@ public class GameController : MonoBehaviour
 			numRedBooks = 0;
 		}
 		CalcTotalMultiplier ();
-		uiController.UpdateUpgradePanels ();
+
 	}
 
 	// updates the total multiplier
@@ -124,6 +129,7 @@ public class GameController : MonoBehaviour
 		totalMultiplier = 1.0;
 		totalMultiplier *= (1 + (double)numRedBooks / 10);
 		Debug.Log ("current multiplier: " + FormatDouble(totalMultiplier));
+		uiController.UpdateUpgradePanels ();
 	}
 
 	// takes a double and returns a simplified string representation
@@ -174,6 +180,35 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+
+
+	// reset game
+	// player loses all upgrade levels, skills, etc.
+	// gains redbooks according to total food produced
+	public void ResetGame () {
+		long redBooksGained = CalcRedBooksGained ();
+		foreach (PanelController panel in upgradePanels) {
+			panel.Level = 0;
+		}
+	}
+
+	long CalcRedBooksGained () {
+		long redBooksGained = 0;
+
+		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
+
+		double totalLevels = 0;
+		foreach (PanelController panel in upgradePanels) {
+			totalLevels += panel.Level;
+		}
+
+		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 1000));
+		return redBooksGained;
+	}
+
+
+
+
 	// save and load functions
 	public void Save()
 	{
@@ -184,8 +219,10 @@ public class GameController : MonoBehaviour
 
 		PlayerData data = new PlayerData ();
 		data.totalFood = totalFood;
+		data.totalSpent = totalSpent;
 		data.numRedBooks = numRedBooks;
-		foreach (PanelController panel in GameObject.Find("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+		data.timeStamp = DateTime.Now;
+		foreach (PanelController panel in upgradePanels) {
 			data.upgradeLevels.Add (panel.Id, panel.Level);
 		}
 
@@ -207,23 +244,33 @@ public class GameController : MonoBehaviour
 
 			// set variables to match values loaded from save file
 			totalFood = data.totalFood;
+			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
-			foreach (PanelController panel in GameObject.Find("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+			foreach (PanelController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels[panel.Id];
 			}
+
 
 			// updates multiplier and income
 			CalcTotalMultiplier ();
 			UpdateIncome ();
+
+			DateTime timeStamp = data.timeStamp;
+
+			Debug.Log ((DateTime.Now - timeStamp).TotalSeconds);
+			// offline earning
+
+			Debug.Log ("Game loaded!");
 		}
 
-		Debug.Log ("Game loaded!");
+		Debug.Log ("No save file found!");
 	}
 
 	public void DeleteSaveFile() 
 	{
 		File.Delete (Application.persistentDataPath + "/PlayerData.dat");
-		Debug.Log ("Save game deleted.");
+		Debug.Log ("Save game deleted!");
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 
 	// the game saves data on pause/exit
@@ -235,12 +282,14 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	// the game saves data on pause/exit
 	void OnApplicationQuit()
 	{
 		Debug.Log ("OnApplicationQuit() called");
 		Save ();
 	}
 
+	// the game saves data periodically
 	IEnumerator AutoSave() {
 		while (autoSaveEnabled = true) {
 			yield return new WaitForSeconds (secondsBetweenAutoSaving);
@@ -285,8 +334,11 @@ public class GameController : MonoBehaviour
 class PlayerData
 {
 	public double totalFood;
+	public double totalSpent;
 	public long numRedBooks;
 	//public int numDiamonds;
+
+	public DateTime timeStamp;
 
 	public Dictionary<int, int> upgradeLevels = new Dictionary<int, int> ();
 }
