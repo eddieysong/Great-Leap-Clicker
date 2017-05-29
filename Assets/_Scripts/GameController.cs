@@ -19,6 +19,9 @@ public class GameController : MonoBehaviour
 	private double totalMultiplier = 1.0;
 
 	// configuration variables
+	private bool autoSaveEnabled = true;
+	private int secondsBetweenAutoSaving = 30;
+
 
 	// handles to other controllers
 	private UIController uiController;
@@ -35,6 +38,8 @@ public class GameController : MonoBehaviour
 	{		
 		// load game from file
 		Load ();
+
+		StartCoroutine ("AutoSave");
 	}
 	
 	// Update is called once per frame
@@ -172,6 +177,8 @@ public class GameController : MonoBehaviour
 	// save and load functions
 	public void Save()
 	{
+		Debug.Log ("Saving game...");
+
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream file = File.Create (Application.persistentDataPath + "/PlayerData.dat");
 
@@ -185,10 +192,13 @@ public class GameController : MonoBehaviour
 		bf.Serialize (file, data);
 		file.Close ();
 
+		Debug.Log ("Game saved!");
 	}
 
 	public void Load() 
 	{
+		Debug.Log ("Loading game...");
+
 		if (File.Exists(Application.persistentDataPath + "/PlayerData.dat")) {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (Application.persistentDataPath + "/PlayerData.dat", FileMode.Open);
@@ -204,13 +214,16 @@ public class GameController : MonoBehaviour
 
 			// updates multiplier and income
 			CalcTotalMultiplier ();
-//			UpdateIncome ();
+			UpdateIncome ();
 		}
+
+		Debug.Log ("Game loaded!");
 	}
 
 	public void DeleteSaveFile() 
 	{
 		File.Delete (Application.persistentDataPath + "/PlayerData.dat");
+		Debug.Log ("Save game deleted.");
 	}
 
 	// the game saves data on pause/exit
@@ -226,6 +239,13 @@ public class GameController : MonoBehaviour
 	{
 		Debug.Log ("OnApplicationQuit() called");
 		Save ();
+	}
+
+	IEnumerator AutoSave() {
+		while (autoSaveEnabled = true) {
+			yield return new WaitForSeconds (secondsBetweenAutoSaving);
+			Save ();
+		}
 	}
 
 
