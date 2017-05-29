@@ -47,9 +47,9 @@ public class UIController : MonoBehaviour {
 		diamondDisplay.text = "0";
 	}
 
-	public void UpdateAllPanels () {
+	public void UpdateUpgradePanels () {
 		// updates all panels
-		foreach (PanelController panel in GameObject.Find("Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
+		foreach (PanelController panel in GameObject.Find("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController>()) {
 			panel.RefreshPanel ();
 		}
 	}

@@ -40,7 +40,7 @@ public class MultipleLevelsButtonScript : MonoBehaviour {
 		}
 		buttonText.text = "x" + multiplier.ToString();
 
-		uiController.UpdateAllPanels ();
+		uiController.UpdateUpgradePanels ();
 	}
 
 	// Getters and setters
