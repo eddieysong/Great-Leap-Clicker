@@ -36,7 +36,7 @@ public class MessagePanelController : MonoBehaviour {
 	public double currentCost;
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		animator = GetComponent<Animator> ();

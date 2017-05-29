@@ -44,10 +44,11 @@ public class PanelController : MonoBehaviour
 	private double currentProduction;
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		MLBScript = GameObject.Find ("Multiple Levels Button").GetComponent<MultipleLevelsButtonScript> ();
+//		Debug.Log (id.ToString () + "panel" + MLBScript.Multiplier.ToString () + "mlb loaded");
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
 		body = transform.Find ("Body").GetComponent<Text> ();
@@ -55,6 +56,10 @@ public class PanelController : MonoBehaviour
 		buttonText = button.transform.Find ("Text").GetComponent<Text> ();
 		button.onClick.AddListener (ButtonClick);
 
+	}
+
+	void Start()
+	{
 		RefreshPanel ();
 	}
 	
@@ -113,10 +118,7 @@ public class PanelController : MonoBehaviour
 
 	public void CalcCurrentCost ()
 	{
-//		if (id == 0) {
-//			currentCost = gameController.FormatDouble (System.Math.Min (baseCost + level, 20) * System.Math.Pow (1 + costPercentIncreasePerLevel, level));
-//		} else {
-
+//		Debug.Log (id.ToString() + "panel" + MLBScript.Multiplier.ToString() + "mlb called");
 		currentCost = baseCost * System.Math.Pow (1 + costPercentIncreasePerLevel, level) * GeometricSum(MLBScript.Multiplier, 1.0 + costPercentIncreasePerLevel);
 	}
 

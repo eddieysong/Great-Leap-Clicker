@@ -16,7 +16,7 @@ public class MultipleLevelsButtonScript : MonoBehaviour {
 	private UIController uiController;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		
 		// store handles to other objects
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();

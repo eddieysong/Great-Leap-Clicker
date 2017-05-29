@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour {
 	private double panelHeight = 200f;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		totalDisplay = GameObject.Find ("Total Display").GetComponent<Text> ();
 		perClickDisplay = GameObject.Find ("PerClick Display").GetComponent<Text> ();

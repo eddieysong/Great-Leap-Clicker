@@ -24,17 +24,17 @@ public class GameController : MonoBehaviour
 	private UIController uiController;
 
 
-	// Use this for initialization
-	void Start ()
+
+	void Awake ()
 	{
 		// store handles to other objects
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
+	}
 
+	void Start()
+	{		
 		// load game from file
-
-
-
-
+		Load ();
 	}
 	
 	// Update is called once per frame
@@ -170,7 +170,8 @@ public class GameController : MonoBehaviour
 	}
 
 	// save and load functions
-	public void Save() {
+	public void Save()
+	{
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream file = File.Create (Application.persistentDataPath + "/PlayerData.dat");
 
@@ -186,7 +187,8 @@ public class GameController : MonoBehaviour
 
 	}
 
-	public void Load() {
+	public void Load() 
+	{
 		if (File.Exists(Application.persistentDataPath + "/PlayerData.dat")) {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (Application.persistentDataPath + "/PlayerData.dat", FileMode.Open);
@@ -202,13 +204,30 @@ public class GameController : MonoBehaviour
 
 			// updates multiplier and income
 			CalcTotalMultiplier ();
-			UpdateIncome ();
+//			UpdateIncome ();
 		}
 	}
 
-	public void DeleteSaveFile() {
+	public void DeleteSaveFile() 
+	{
 		File.Delete (Application.persistentDataPath + "/PlayerData.dat");
 	}
+
+	// the game saves data on pause/exit
+	void OnApplicationPause(bool isPaused)
+	{
+		Debug.Log ("OnApplicationPause() called, isPaused = " + isPaused.ToString());
+		if (isPaused) {
+			Save ();
+		}
+	}
+
+	void OnApplicationQuit()
+	{
+		Debug.Log ("OnApplicationQuit() called");
+		Save ();
+	}
+
 
 	// Setters and getters
 	public double TotalFood {
