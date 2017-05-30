@@ -186,22 +186,29 @@ public class GameController : MonoBehaviour
 	// player loses all upgrade levels, skills, etc.
 	// gains redbooks according to total food produced
 	public void ResetGame () {
+		
 		long redBooksGained = CalcRedBooksGained ();
+		IncreaseRedBooks (redBooksGained);
 		foreach (PanelController panel in upgradePanels) {
 			panel.Level = 0;
 		}
+		totalFood = 0;
+		totalSpent = 0;
+		UpdateIncome ();
+
+
 	}
 
-	long CalcRedBooksGained () {
+	// calculates the number of red books to be gained by resetting, based on total food produced and levels
+	public long CalcRedBooksGained () {
+		
 		long redBooksGained = 0;
-
 		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
 		double totalLevels = 0;
 		foreach (PanelController panel in upgradePanels) {
 			totalLevels += panel.Level;
 		}
-
 		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 1000));
 		return redBooksGained;
 	}
@@ -236,7 +243,7 @@ public class GameController : MonoBehaviour
 	{
 		Debug.Log ("Loading game...");
 
-		if (File.Exists(Application.persistentDataPath + "/PlayerData.dat")) {
+		if (File.Exists (Application.persistentDataPath + "/PlayerData.dat")) {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (Application.persistentDataPath + "/PlayerData.dat", FileMode.Open);
 			PlayerData data = (PlayerData)bf.Deserialize (file);
@@ -247,7 +254,7 @@ public class GameController : MonoBehaviour
 			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
 			foreach (PanelController panel in upgradePanels) {
-				panel.Level = data.upgradeLevels[panel.Id];
+				panel.Level = data.upgradeLevels [panel.Id];
 			}
 
 
@@ -261,9 +268,9 @@ public class GameController : MonoBehaviour
 			// offline earning
 
 			Debug.Log ("Game loaded!");
+		} else {
+			Debug.Log ("No save file found!");
 		}
-
-		Debug.Log ("No save file found!");
 	}
 
 	public void DeleteSaveFile() 
@@ -291,7 +298,7 @@ public class GameController : MonoBehaviour
 
 	// the game saves data periodically
 	IEnumerator AutoSave() {
-		while (autoSaveEnabled = true) {
+		while (autoSaveEnabled == true) {
 			yield return new WaitForSeconds (secondsBetweenAutoSaving);
 			Save ();
 		}

@@ -17,23 +17,7 @@ public class MessagePanelController : MonoBehaviour {
 	private Text buttonText;
 	private Button outside;
 
-	// upgrade properties
-	public int id;
-	public int level;
-	public string upgradeName;
-	public string description;
-	public double baseCost = 5f;
-	public double increasePerLevel = 1f;
-
-	// upgrade cost follows the formula: Y = baseCost * (1 + costPercentIncreasePerLevel) ^ currentLevel
-	// this is A
-	//	public double flatIncreasePerLevel = 1f;
-	// this is B
-	public double costPercentIncreasePerLevel = 0.05f;
-	// this is C
-	//	public double expFactorPerLevel = 1.02f;
-
-	public double currentCost;
+	private string callBackParameter;
 
 	// Use this for initialization
 	void Awake ()
@@ -89,7 +73,7 @@ public class MessagePanelController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
-			Debug.Log ("ok");
+			gameController.SendMessage (callBackParameter, SendMessageOptions.DontRequireReceiver);
 			FadeOut ();
 		}
 	}
@@ -97,17 +81,27 @@ public class MessagePanelController : MonoBehaviour {
 	public void OutsideClick ()
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
-			Debug.Log ("outside");
 			FadeOut ();
 		}
 	}
 
-	private void PopUp() {
+	public void PopUp() {
 		animator.SetTrigger ("Show");
 	}
 
-	private void FadeOut() {
+	public void FadeOut() {
 		animator.SetTrigger ("Hide");
+		Destroy (gameObject, 0.4f);
 	}
 
+	// getters and setters
+	public string CallBackParameter {
+		get {
+			return this.callBackParameter;
+		}
+		set {
+			callBackParameter = value;
+		}
+	}
 }
+

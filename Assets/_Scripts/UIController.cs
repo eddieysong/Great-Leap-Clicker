@@ -9,6 +9,10 @@ public class UIController : MonoBehaviour {
 	[SerializeField]
 	private GameObject panelPrefab;
 
+	// msg panel prefab
+	[SerializeField]
+	private GameObject msgPanel;
+
 	// handles to other controllers
 	private GameController gameController;
 	private PanelController[] upgradePanels;
@@ -54,11 +58,26 @@ public class UIController : MonoBehaviour {
 			panel.RefreshPanel ();
 		}
 	}
-//
-//	public void AddPanel (int id) {
-//		GameObject newPanel = Instantiate (panelPrefab);
-//		newPanel.transform.SetParent (viewportContent.transform);
-//		newPanel.transform.localScale = new Vector3 (1f, 1f, 1f);
-//		newPanel.transform.localPosition = new Vector2 (initialXPos, initialYPos - panelHeight * id);
-//	}
+
+	public MessagePanelController NewMessagePanel () {
+		if (GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			return null;
+		}
+
+		GameObject newMsgPanel = Instantiate (msgPanel);
+		newMsgPanel.transform.SetParent (GameObject.FindGameObjectWithTag ("UICanvas").transform);
+		MessagePanelController msgPanelController = newMsgPanel.GetComponent<MessagePanelController> ();
+
+
+		msgPanelController.PopUp ();
+		return msgPanelController;
+	}
+
+
+	// getters/setters
+	public GameObject MsgPanel {
+		get {
+			return this.msgPanel;
+		}
+	}
 }
