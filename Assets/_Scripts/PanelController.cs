@@ -82,8 +82,11 @@ public class PanelController : MonoBehaviour
 		CalcCurrentProduction ();
 		gameController.UpdateIncome ();
 		SetTitle (upgradeName + " - Level " + level);
+//		SetBody (description + "\nProduction: "
+//			+ gameController.FormatDouble(increasePerLevel * gameController.TotalMultiplier * MLBScript.Multiplier)
+//			+ ((id == 0) ? "/Click" : "/Second"));
 		SetBody (description + "\nProduction: "
-			+ gameController.FormatDouble(increasePerLevel * gameController.TotalMultiplier * MLBScript.Multiplier)
+			+ gameController.FormatDouble(currentProduction)
 			+ ((id == 0) ? "/Click" : "/Second"));
 		SetButtonText ("BUY\n" + gameController.FormatDouble(currentCost));
 	}

@@ -55,8 +55,8 @@ public class GameController : MonoBehaviour
 //		Debug.Log (Time.deltaTime);
 //		Debug.Log ("total food: " + FormatDouble(totalFood));
 
-		if (Input.GetKey (KeyCode.P)) {
-			Debug.Log(CalcRedBooksGained () .ToString());
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			totalFood += foodPerSecond * 3600 * totalMultiplier;
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
@@ -205,7 +205,7 @@ public class GameController : MonoBehaviour
 	public long CalcRedBooksGained () {
 		
 		long redBooksGained = 0;
-		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000000)))));
+		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
 		double totalLevels = 0;
 		foreach (PanelController panel in upgradePanels) {
