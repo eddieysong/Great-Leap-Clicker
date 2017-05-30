@@ -194,7 +194,9 @@ public class GameController : MonoBehaviour
 		}
 		totalFood = 0;
 		totalSpent = 0;
-		UpdateIncome ();
+
+		Save ();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
 
 	}
@@ -203,13 +205,13 @@ public class GameController : MonoBehaviour
 	public long CalcRedBooksGained () {
 		
 		long redBooksGained = 0;
-		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
+		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000000)))));
 
 		double totalLevels = 0;
 		foreach (PanelController panel in upgradePanels) {
 			totalLevels += panel.Level;
 		}
-		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 1000));
+		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 500));
 		return redBooksGained;
 	}
 

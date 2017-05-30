@@ -8,6 +8,7 @@ public class PanelController : MonoBehaviour
 	// handles to other controllers
 	private GameController gameController;
 	private MultipleLevelsButtonScript MLBScript;
+	private ResetButtonScript RBScript;
 
 	// handles to UI elements displayed
 	private Image icon;
@@ -48,6 +49,7 @@ public class PanelController : MonoBehaviour
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		MLBScript = GameObject.Find ("Multiple Levels Button").GetComponent<MultipleLevelsButtonScript> ();
+		RBScript = GameObject.Find ("Reset Button").GetComponent<ResetButtonScript> ();
 //		Debug.Log (id.ToString () + "panel" + MLBScript.Multiplier.ToString () + "mlb loaded");
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
@@ -110,7 +112,7 @@ public class PanelController : MonoBehaviour
 	{
 		if (gameController.TotalFood >= currentCost) {
 			gameController.SpendFood (currentCost);
-			level += MLBScript.Multiplier;
+			this.Level += MLBScript.Multiplier;
 
 			RefreshPanel ();
 		}
@@ -147,6 +149,11 @@ public class PanelController : MonoBehaviour
 		set {
 			level = value;
 			RefreshPanel ();
+
+			// activates reset button as soon as honey farm is purchased
+			if (id == 12 && level > 0) {
+				RBScript.Activate ();
+			}
 		}
 	}
 

@@ -29,14 +29,19 @@ public class ResetButtonScript : MonoBehaviour {
 	}
 
 	void Start () {
-		
+		gameObject.SetActive (false);
+	}
+
+	public void Activate () {
+		gameObject.SetActive (true);
 	}
 
 	void Update () {
 		if (msgPanelController != null) {
 			redBooksGained = gameController.CalcRedBooksGained ();
 			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels and skill levels to be reset.\n\n " +
-				"In exchange, you gain " + redBooksGained.ToString() + " Red Books based on the total food you have produced.\n\n " +
+				"In exchange, you gain " + gameController.FormatLong(redBooksGained) + 
+				" Red Books (based on the total food you have produced, plus 1 book every 500 total upgrade levels).\n\n " +
 				"Each Red Book increase total production by 10%, stacking additively.");
 		}
 	}
@@ -45,9 +50,9 @@ public class ResetButtonScript : MonoBehaviour {
 
 		if (msgPanelController = uiController.NewMessagePanel ()) {
 			msgPanelController.SetTitle ("A New Start");
-			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels and skill levels to be reset.\n\n " +
-				"In exchange, you gain " + redBooksGained.ToString() + " Red Books based on the total food you have produced.\n\n " +
-			"Each Red Book increase total production by 10%, stacking additively.");
+//			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels and skill levels to be reset.\n\n " +
+//				"In exchange, you gain Red Books based on the total food you have produced, plus 1 book every 500 total upgrade levels.\n\n " +
+//			"Each Red Book increase total production by 10%, stacking additively.");
 			msgPanelController.SetButtonText ("Reset Now!");
 			msgPanelController.CallBackParameter = "ResetGame";
 		}
