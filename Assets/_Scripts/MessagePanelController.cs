@@ -52,9 +52,9 @@ public class MessagePanelController : MonoBehaviour {
 
 	}
 
-	public void SetImage ()
+	public void SetImage (string filePath)
 	{
-
+		icon.sprite = Resources.Load<Sprite>(filePath);
 	}
 
 	public void SetTitle (string title)

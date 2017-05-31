@@ -50,7 +50,7 @@ public class UIController : MonoBehaviour {
 		perClickDisplay.text = gameController.FormatDouble(gameController.FoodPerClick * gameController.TotalMultiplier);
 		perSecDisplay.text = gameController.FormatDouble(gameController.FoodPerSecond * gameController.TotalMultiplier);
 		redBookDisplay.text = gameController.FormatLong(gameController.NumRedBooks);
-		diamondDisplay.text = "0";
+		diamondDisplay.text = gameController.NumDiamonds.ToString();
 	}
 
 	public void UpdateUpgradePanels () {

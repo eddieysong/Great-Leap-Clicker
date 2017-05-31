@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
 	private long numRedBooks = 0;
 	private double totalMultiplier = 1;
 
+	private long numDiamonds = 0;
+
 	// configuration variables
 	private bool autoSaveEnabled = true;
 	private int secondsBetweenAutoSaving = 30;
@@ -40,7 +42,8 @@ public class GameController : MonoBehaviour
 	void Start()
 	{		
 		// load game from file
-		Load ();
+		// The game is also loaded by OnApplicationPause(false), so not loaded again here
+		// Load ();
 
 		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
@@ -49,20 +52,22 @@ public class GameController : MonoBehaviour
 		GameObject.Find("Upgrade Tab").GetComponent<TabController>().ButtonClick();
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 		// Main income logic here, triggered every frame
 		totalFood += foodPerSecond * Time.deltaTime * totalMultiplier;
-//		Debug.Log (Time.deltaTime);
-//		Debug.Log ("total food: " + FormatDouble(totalFood));
 
+		// testing shortcuts
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			totalFood += foodPerSecond * 3600 * totalMultiplier;
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			uiController.NewMessagePanel ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			numDiamonds += 10;
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
@@ -211,7 +216,7 @@ public class GameController : MonoBehaviour
 	public long CalcRedBooksGained () {
 		
 		long redBooksGained = 0;
-		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
+		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
 		double totalLevels = 0;
 		foreach (PanelController panel in upgradePanels) {
@@ -236,6 +241,7 @@ public class GameController : MonoBehaviour
 		data.totalFood = totalFood;
 		data.totalSpent = totalSpent;
 		data.numRedBooks = numRedBooks;
+		data.numDiamonds = numDiamonds;
 		data.timeStamp = DateTime.Now;
 		foreach (PanelController panel in upgradePanels) {
 			data.upgradeLevels.Add (panel.Id, panel.Level);
@@ -261,6 +267,7 @@ public class GameController : MonoBehaviour
 			totalFood = data.totalFood;
 			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
+			numDiamonds = data.numDiamonds;
 			foreach (PanelController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels [panel.Id];
 			}
@@ -273,11 +280,29 @@ public class GameController : MonoBehaviour
 			DateTime timeStamp = data.timeStamp;
 
 			Debug.Log ((DateTime.Now - timeStamp).TotalSeconds);
-			// offline earning
+			CalcOfflineEarning ((DateTime.Now - timeStamp).TotalSeconds);
 
 			Debug.Log ("Game loaded!");
 		} else {
 			Debug.Log ("No save file found!");
+		}
+	}
+
+	public void CalcOfflineEarning(double totalSeconds) {
+		if (totalSeconds > 10) {
+			// calculate offline earning
+			double offlineEarning = foodPerSecond * totalSeconds * totalMultiplier;
+			totalFood += offlineEarning;
+
+			if (offlineEarning > 0) {
+				// msg panel to state offline earning
+				MessagePanelController offlineEarningPanel = uiController.NewMessagePanel ();
+				offlineEarningPanel.SetTitle ("Offline Earning");
+				offlineEarningPanel.SetBody ("While you were away, your workers earned <color=#ff0000ff>"
+				+ FormatDouble (offlineEarning) + "</color> of food.\nLong Live the Chairman!");
+				offlineEarningPanel.SetButtonText ("Long Live!");
+				offlineEarningPanel.SetImage ("Sprites/Upgrade Icons/wheat");
+			}
 		}
 	}
 
@@ -340,6 +365,12 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	public long NumDiamonds {
+		get {
+			return this.numDiamonds;
+		}
+	}
+
 	public double TotalMultiplier {
 		get {
 			return this.totalMultiplier;
@@ -354,6 +385,7 @@ class PlayerData
 	public double totalFood;
 	public double totalSpent;
 	public long numRedBooks;
+	public long numDiamonds;
 	//public int numDiamonds;
 
 	public DateTime timeStamp;
