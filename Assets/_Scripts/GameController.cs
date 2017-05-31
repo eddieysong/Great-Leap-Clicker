@@ -10,7 +10,6 @@ using System.IO;
 
 public class GameController : MonoBehaviour
 {
-
 	// game logic variables
 	private double totalFood = 0;
 	private double totalSpent = 0;
@@ -43,13 +42,16 @@ public class GameController : MonoBehaviour
 		// load game from file
 		Load ();
 
+		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
+
+		// selects the upgrades tab by default
+		GameObject.Find("Upgrade Tab").GetComponent<TabController>().ButtonClick();
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-
 		// Main income logic here, triggered every frame
 		totalFood += foodPerSecond * Time.deltaTime * totalMultiplier;
 //		Debug.Log (Time.deltaTime);
@@ -288,6 +290,8 @@ public class GameController : MonoBehaviour
 		Debug.Log ("OnApplicationPause() called, isPaused = " + isPaused.ToString());
 		if (isPaused) {
 			Save ();
+		} else {
+			Load ();
 		}
 	}
 
@@ -339,6 +343,7 @@ public class GameController : MonoBehaviour
 	}
 }
 
+// class to hold save file data
 [Serializable]
 class PlayerData
 {
