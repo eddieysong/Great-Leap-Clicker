@@ -7,6 +7,7 @@ public class MessagePanelController : MonoBehaviour {
 	
 	// handles to other controllers
 	private GameController gameController;
+	private UIController uiController;
 	private Animator animator;
 
 	// handles to UI elements displayed
@@ -23,6 +24,7 @@ public class MessagePanelController : MonoBehaviour {
 	void Awake ()
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
 		animator = GetComponent<Animator> ();
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
@@ -74,24 +76,29 @@ public class MessagePanelController : MonoBehaviour {
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
 			gameController.SendMessage (callBackParameter, SendMessageOptions.DontRequireReceiver);
-			FadeOut ();
+			StartCoroutine(FadeOut ());
 		}
 	}
 
 	public void OutsideClick ()
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
-			FadeOut ();
+			StartCoroutine(FadeOut ());
 		}
 	}
 
 	public void PopUp() {
+		Debug.Log ("show panel");
 		animator.SetTrigger ("Show");
 	}
 
-	public void FadeOut() {
+	public IEnumerator FadeOut() {
 		animator.SetTrigger ("Hide");
-		Destroy (gameObject, 0.4f);
+		gameObject.tag = "Untagged";
+		yield return new WaitForSeconds (0.4f);
+
+		uiController.MessagePanelDestroyed ();
+		Destroy (gameObject);
 	}
 
 	// getters and setters

@@ -61,6 +61,10 @@ public class GameController : MonoBehaviour
 			totalFood += foodPerSecond * 3600 * totalMultiplier;
 		}
 
+		if (Input.GetKeyDown (KeyCode.Q)) {
+			uiController.NewMessagePanel ();
+		}
+
 		if (Input.GetKeyDown (KeyCode.O)) {
 			IncreaseRedBooks (100);
 		}

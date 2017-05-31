@@ -48,13 +48,15 @@ public class ResetButtonScript : MonoBehaviour {
 
 	public void ButtonClick () {
 
-		if (msgPanelController = uiController.NewMessagePanel ()) {
-			msgPanelController.SetTitle ("A New Start");
+		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			if (msgPanelController = uiController.NewMessagePanel ()) {
+				msgPanelController.SetTitle ("A New Start");
 //			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels and skill levels to be reset.\n\n " +
 //				"In exchange, you gain Red Books based on the total food you have produced, plus 1 book every 500 total upgrade levels.\n\n " +
 //			"Each Red Book increase total production by 10%, stacking additively.");
-			msgPanelController.SetButtonText ("Reset Now!");
-			msgPanelController.CallBackParameter = "ResetGame";
+				msgPanelController.SetButtonText ("Reset Now!");
+				msgPanelController.CallBackParameter = "ResetGame";
+			}
 		}
 	}
 }

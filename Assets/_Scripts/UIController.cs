@@ -12,6 +12,7 @@ public class UIController : MonoBehaviour {
 	// msg panel prefab
 	[SerializeField]
 	private GameObject msgPanel;
+	private List<GameObject> msgPanelQueue;
 
 	// handles to other controllers
 	private GameController gameController;
@@ -60,18 +61,31 @@ public class UIController : MonoBehaviour {
 	}
 
 	public MessagePanelController NewMessagePanel () {
-		if (GameObject.FindGameObjectWithTag ("MsgPanel")) {
-			return null;
-		}
+
+		bool msgPanelExists = GameObject.FindGameObjectWithTag ("MsgPanel");
 
 		GameObject newMsgPanel = Instantiate (msgPanel);
 		newMsgPanel.transform.SetParent (GameObject.FindGameObjectWithTag ("UICanvas").transform);
+
 		MessagePanelController msgPanelController = newMsgPanel.GetComponent<MessagePanelController> ();
 
+		if (!msgPanelExists) {
+			msgPanelController.PopUp ();
+		}
 
-		msgPanelController.PopUp ();
 		return msgPanelController;
+
+
 	}
+
+	public void MessagePanelDestroyed() {
+		Debug.Log (" MessagePanelDestroyed called");
+		GameObject msgPanel = GameObject.FindGameObjectWithTag ("MsgPanel");
+			if (msgPanel) {
+				msgPanel.SendMessage ("PopUp", SendMessageOptions.DontRequireReceiver);
+			}
+	}
+
 
 
 	// getters/setters
