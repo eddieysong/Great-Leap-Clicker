@@ -67,8 +67,20 @@ public class PanelController : MonoBehaviour
 
 	void Start ()
 	{
+		// setting upgrade values dynamically through a formula
+		if (id != 0) {
+			baseCost = 50 * Factorial(id) * System.Math.Pow(2, id - 1);
+			increasePerLevel = (0.1 * System.Math.Pow(0.5, id)) * baseCost;
+		}
 		RefreshPanel ();
 	}
+
+	// helper function
+	long Factorial(long n)
+	{
+		if (n >= 2) return n * Factorial(n - 1);
+		return 1;
+	} 
 	
 	// Update is called once per frame
 	void Update ()
@@ -144,10 +156,10 @@ public class PanelController : MonoBehaviour
 		return baseCost * System.Math.Pow (1 + costPercentIncreasePerLevel, level) * GeometricSum (MLBScript.Multiplier, 1.0 + costPercentIncreasePerLevel);
 	}
 
-	// every 25 levels increase production to 1.5x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
+	// every 25 levels increase production by a factor of 2x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
 	public double CalcCurrentProduction (int level)
 	{
-		return increasePerLevel * level * System.Math.Pow (1.5, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
+		return increasePerLevel * level * System.Math.Pow (2, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
 	}
 
 	// helper method, returns the sum of the first n terms of a geometric series with ratio r

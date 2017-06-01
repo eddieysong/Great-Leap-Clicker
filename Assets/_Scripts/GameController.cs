@@ -42,8 +42,7 @@ public class GameController : MonoBehaviour
 	void Start()
 	{		
 		// load game from file
-		// The game is also loaded by OnApplicationPause(false), so not loaded again here
-		// Load ();
+		Load ();
 
 		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
@@ -147,25 +146,43 @@ public class GameController : MonoBehaviour
 	public string FormatDouble (double number)
 	{
 		if (number < 1000) {
-			return number.ToString ("F2") + " kg";
+			return number.ToString ("F2") + " g";
 		} else if (number < 1000000) {
-			return (number / 1000).ToString ("F2") + " t";
+			return (number / 1000).ToString ("F2") + " kg";
 		} else if (number < 1000000000) {
-			return (number / 1000000).ToString ("F2") + " kt";
+			return (number / 1000000).ToString ("F2") + " t";
 		} else if (number < 1000000000000) {
-			return (number / 1000000000).ToString ("F2") + " Mt";
+			return (number / 1000000000).ToString ("F2") + " Kt";
 		} else if (number < 1000000000000000) {
-			return (number / 1000000000000).ToString ("F2") + " Gt";
+			return (number / 1000000000000).ToString ("F2") + " Mt";
 		} else if (number < 1000000000000000000) {
-			return (number / 1000000000000000).ToString ("F2") + " Tt";
+			return (number / 1000000000000000).ToString ("F2") + " Gt";
 		} else if (number < 1000000000000000000000.0) {
-			return (number / 1000000000000000000).ToString ("F2") + " Pt";
+			return (number / 1000000000000000000).ToString ("F2") + " Tt";
 		} else if (number < 1000000000000000000000000.0) {
-			return (number / 1000000000000000000000.0).ToString ("F2") + " Et";
+			return (number / 1000000000000000000000.0).ToString ("F2") + " Pt";
 		} else if (number < 1000000000000000000000000000.0) {
-			return (number / 1000000000000000000000000.0).ToString ("F2") + " Zt";
+			return (number / 1000000000000000000000000.0).ToString ("F2") + " Et";
 		} else if (number < 1000000000000000000000000000000.0) {
-			return (number / 1000000000000000000000000000.0).ToString ("F2") + " Yt";
+			return (number / 1000000000000000000000000000.0).ToString ("F2") + " Zt";
+		} else if (number < 1000000000000000000000000000000000.0) {
+			return (number / 1000000000000000000000000000000.0).ToString ("F2") + " Yt";
+		} else if (number < System.Math.Pow(10, 36)) {
+			return (number / System.Math.Pow(10, 33)).ToString ("F2") + " KY";
+		} else if (number < System.Math.Pow(10, 39)) {
+			return (number / System.Math.Pow(10, 36)).ToString ("F2") + " MY";
+		} else if (number < System.Math.Pow(10, 42)) {
+			return (number / System.Math.Pow(10, 39)).ToString ("F2") + " GY";
+		} else if (number < System.Math.Pow(10, 45)) {
+			return (number / System.Math.Pow(10, 42)).ToString ("F2") + " TY";
+		} else if (number < System.Math.Pow(10, 48)) {
+			return (number / System.Math.Pow(10, 45)).ToString ("F2") + " PY";
+		} else if (number < System.Math.Pow(10, 51)) {
+			return (number / System.Math.Pow(10, 48)).ToString ("F2") + " EY";
+		} else if (number < System.Math.Pow(10, 54)) {
+			return (number / System.Math.Pow(10, 51)).ToString ("F2") + " ZY";
+		} else if (number < System.Math.Pow(10, 57)) {
+			return (number / System.Math.Pow(10, 54)).ToString ("F2") + " YY";
 		} else if (number < System.Math.Pow (10, 300)) {
 			return number.ToString ("0.00e0");
 		} else {
@@ -208,8 +225,6 @@ public class GameController : MonoBehaviour
 
 		Save ();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-
 	}
 
 	// calculates the number of red books to be gained by resetting, based on total food produced and levels
@@ -320,7 +335,7 @@ public class GameController : MonoBehaviour
 		if (isPaused) {
 			Save ();
 		} else {
-			Load ();
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 	}
 
