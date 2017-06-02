@@ -23,22 +23,22 @@ public class PanelController : MonoBehaviour
 	[SerializeField]
 	// id = 0 means click upgrade, id >= 1 && id <= 12 means per second income upgrade
 	private int id;
-	[SerializeField]
+//	[SerializeField]
 	private int level;
 	[SerializeField]
 	private string upgradeName;
 	[SerializeField]
 	private string description;
-	[SerializeField]
+//	[SerializeField]
 	private double baseCost = 5f;
-	[SerializeField]
+//	[SerializeField]
 	private double increasePerLevel = 1f;
 
 	// upgrade cost follows the formula: Y = baseCost * (1 + costPercentIncreasePerLevel) ^ currentLevel
 	// this is A
 	//	public double flatIncreasePerLevel = 1f;
 	// this is B
-	[SerializeField]
+//	[SerializeField]
 	private double costPercentIncreasePerLevel = 0.07f;
 	// this is C
 	//	public double expFactorPerLevel = 1.02f;
@@ -53,7 +53,7 @@ public class PanelController : MonoBehaviour
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
 		MLBScript = GameObject.Find ("Multiple Levels Button").GetComponent<MultipleLevelsButtonScript> ();
 		RBScript = GameObject.Find ("Reset Button").GetComponent<ResetButtonScript> ();
-//		Debug.Log (id.ToString () + "panel" + MLBScript.Multiplier.ToString () + "mlb loaded");
+		//		Debug.Log (id.ToString () + "panel" + MLBScript.Multiplier.ToString () + "mlb loaded");
 		panelButton = transform.Find ("Panel Button").GetComponent<Button> ();
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
@@ -81,7 +81,7 @@ public class PanelController : MonoBehaviour
 		if (n >= 2) return n * Factorial(n - 1);
 		return 1;
 	} 
-	
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -101,15 +101,15 @@ public class PanelController : MonoBehaviour
 		SetTitle (upgradeName + " - Level <color=#ff0000ff>" + level + "</color>");
 
 		SetBody ("Current Production: <color=#ff0000ff>"
-		+ gameController.FormatDouble (currentProduction * gameController.TotalMultiplier) + "</color>"
-		+ ((id == 0) ? "/Click" : "/Second")
-		+ "\nIncrease after Buy: <color=#ff0000ff>"
-		+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.TotalMultiplier) + "</color>"
-		+ ((id == 0) ? "/Click" : "/Second")
-		+ ((id == 0) ? "" : "\n<color=#ff0000ff>"
-		+ ((gameController.FoodPerSecond == 0) ? 0 : (currentProduction / gameController.FoodPerSecond * 100)).ToString ("F2")
-		+ "%</color> of Total Income/Second"));
-		
+			+ gameController.FormatDouble (currentProduction * gameController.TotalMultiplier) + "</color>"
+			+ ((id == 0) ? "/Click" : "/Second")
+			+ "\nIncrease after Buy: <color=#ff0000ff>"
+			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.TotalMultiplier) + "</color>"
+			+ ((id == 0) ? "/Click" : "/Second")
+			+ ((id == 0) ? "" : "\n<color=#ff0000ff>"
+				+ ((gameController.FoodPerSecond == 0) ? 0 : (currentProduction / gameController.FoodPerSecond * 100)).ToString ("F2")
+				+ "%</color> of Total Income/Second"));
+
 		SetButtonText ("BUY\n" + gameController.FormatDouble (currentCost));
 
 	}
@@ -136,7 +136,20 @@ public class PanelController : MonoBehaviour
 
 	public void PanelButtonClick ()
 	{
-		Debug.Log (id.ToString () + "panel button clicked");
+		MessagePanelController msgPanel = uiController.NewMessagePanel ();
+		msgPanel.SetTitle (upgradeName);
+		msgPanel.SetBody(description
+			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString() + "</color>"
+			+ "\nBase Increase/Level: <color=#ff0000ff>"
+			+ gameController.FormatDouble (increasePerLevel) + "</color>"
+			+ ((id == 0) ? "/Click" : "/Second")
+			+ "\nGlobal Multiplier: <color=#ff0000ff>"
+			+ gameController.FormatMultiplier (gameController.TotalMultiplier) + "</color>"
+			+ "\nUpgrade Level Multiplier: <color=#ff0000ff>"
+			+ gameController.FormatMultiplier (CalcLevelMultiplier(level)) + "</color>"
+			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
+			+ gameController.FormatDouble (increasePerLevel * gameController.TotalMultiplier * CalcLevelMultiplier(level)) + "</color>"
+			+ ((id == 0) ? "/Click" : "/Second"));
 	}
 
 	public void ButtonClick ()
@@ -152,14 +165,20 @@ public class PanelController : MonoBehaviour
 
 	public double CalcCurrentCost ()
 	{
-//		Debug.Log (id.ToString() + "panel" + MLBScript.Multiplier.ToString() + "mlb called");
+		//		Debug.Log (id.ToString() + "panel" + MLBScript.Multiplier.ToString() + "mlb called");
 		return baseCost * System.Math.Pow (1 + costPercentIncreasePerLevel, level) * GeometricSum (MLBScript.Multiplier, 1.0 + costPercentIncreasePerLevel);
 	}
 
 	// every 25 levels increase production by a factor of 2x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
 	public double CalcCurrentProduction (int level)
 	{
-		return increasePerLevel * level * System.Math.Pow (2, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
+		return increasePerLevel * level * CalcLevelMultiplier (level);
+	}
+
+	// every 25 levels increase production by a factor of 2x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
+	public double CalcLevelMultiplier (int level)
+	{
+		return System.Math.Pow (2, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
 	}
 
 	// helper method, returns the sum of the first n terms of a geometric series with ratio r

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6b070482474c59c49b38c7ad19fd22e8
-timeCreated: 1496431818
+guid: 0c52c7bcdd231ef4e9c9fc422ea564ca
+timeCreated: 1496438906
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -9,9 +9,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Blue Highway
+  fontName: Aileron
   fontNames:
-  - Blue Highway
+  - Aileron
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

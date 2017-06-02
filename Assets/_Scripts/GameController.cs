@@ -30,6 +30,8 @@ public class GameController : MonoBehaviour
 	private UIController uiController;
 	private PanelController[] upgradePanels;
 
+	// helper flag
+	private bool justStarted;
 
 
 	void Awake ()
@@ -41,6 +43,9 @@ public class GameController : MonoBehaviour
 
 	void Start()
 	{		
+		// flag to stop OnApplicationPause to load the game again
+		justStarted = true;
+
 		// load game from file
 		Load ();
 
@@ -50,7 +55,7 @@ public class GameController : MonoBehaviour
 		// selects the upgrades tab by default
 		GameObject.Find("Upgrade Tab").GetComponent<TabController>().ButtonClick();
 	}
-	
+
 	void Update ()
 	{
 		// Main income logic here, triggered every frame
@@ -209,12 +214,22 @@ public class GameController : MonoBehaviour
 	}
 
 
+	// returns a string representation of the total multiplier
+	public string FormatMultiplier (double number) {
+		if (number < 1000) {
+			return number.ToString ("F2");
+		} else {
+			return FormatLong (Convert.ToInt64 (number));
+		}
+	}
+
+
 
 	// reset game
 	// player loses all upgrade levels, skills, etc.
 	// gains redbooks according to total food produced
 	public void ResetGame () {
-		
+
 		long redBooksGained = CalcRedBooksGained ();
 		IncreaseRedBooks (redBooksGained);
 		foreach (PanelController panel in upgradePanels) {
@@ -229,7 +244,7 @@ public class GameController : MonoBehaviour
 
 	// calculates the number of red books to be gained by resetting, based on total food produced and levels
 	public long CalcRedBooksGained () {
-		
+
 		long redBooksGained = 0;
 		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
@@ -314,7 +329,7 @@ public class GameController : MonoBehaviour
 				MessagePanelController offlineEarningPanel = uiController.NewMessagePanel ();
 				offlineEarningPanel.SetTitle ("Offline Earning");
 				offlineEarningPanel.SetBody ("While you were away, your workers earned <color=#ff0000ff>"
-				+ FormatDouble (offlineEarning) + "</color> of food.\nLong Live the Chairman!");
+					+ FormatDouble (offlineEarning) + "</color> of food.\nLong Live the Chairman!");
 				offlineEarningPanel.SetButtonText ("Long Live!");
 				offlineEarningPanel.SetImage ("Sprites/Upgrade Icons/wheat");
 			}
@@ -328,14 +343,15 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 
-	// the game saves data on pause/exit
+	// the game saves data on pause/exit, loads on resume (except when game just started)
 	void OnApplicationPause(bool isPaused)
 	{
 		Debug.Log ("OnApplicationPause() called, isPaused = " + isPaused.ToString());
 		if (isPaused) {
 			Save ();
-		} else {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		} else if (justStarted) {
+			justStarted = false;
+			Load ();
 		}
 	}
 
@@ -391,6 +407,7 @@ public class GameController : MonoBehaviour
 			return this.totalMultiplier;
 		}
 	}
+
 }
 
 // class to hold save file data
