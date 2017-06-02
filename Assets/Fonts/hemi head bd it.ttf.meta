@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 70edf0f191319804c8fb3745e113147a
-timeCreated: 1495740199
+guid: 040ba3814cc8fec4597f607cac3c8030
+timeCreated: 1496428831
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -9,9 +9,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Roboto Condensed
+  fontName: Hemi Head
   fontNames:
-  - Roboto Condensed
+  - Hemi Head
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

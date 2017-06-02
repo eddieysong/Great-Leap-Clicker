@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 4ac9d22b2242abd4d922af47fa8f715d
-timeCreated: 1495740199
+guid: 4fbf1b545fcc06f4ca9793a997752945
+timeCreated: 1496430287
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -9,9 +9,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Roboto
+  fontName: Gnuolane
   fontNames:
-  - Roboto
+  - Gnuolane
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

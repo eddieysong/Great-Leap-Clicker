@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 3dd05aead29dd6b4ca397393d4cf4679
-timeCreated: 1495733896
+guid: 6b070482474c59c49b38c7ad19fd22e8
+timeCreated: 1496431818
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -9,9 +9,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Open Sans
+  fontName: Blue Highway
   fontNames:
-  - Open Sans
+  - Blue Highway
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
