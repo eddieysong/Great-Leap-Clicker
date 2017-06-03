@@ -149,7 +149,10 @@ public class PanelController : MonoBehaviour
 			+ gameController.FormatMultiplier (CalcLevelMultiplier(level)) + "</color>"
 			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
 			+ gameController.FormatDouble (increasePerLevel * gameController.TotalMultiplier * CalcLevelMultiplier(level)) + "</color>"
-			+ ((id == 0) ? "/Click" : "/Second"));
+			+ ((id == 0) ? "/Click" : "/Second")
+			+ "\n\nLong Live the Chairman!");
+		msgPanel.SetIcon (icon);
+		msgPanel.SetButtonText ("Long Live!");
 	}
 
 	public void ButtonClick ()

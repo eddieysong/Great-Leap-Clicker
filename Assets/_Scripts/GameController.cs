@@ -218,8 +218,16 @@ public class GameController : MonoBehaviour
 	public string FormatMultiplier (double number) {
 		if (number < 1000) {
 			return number.ToString ("F2");
+		} else if (number < 1000000) {
+			return ((double)number / 1000).ToString ("F2") + " K";
+		} else if (number < 1000000000) {
+			return ((double)number / 1000000).ToString ("F2") + " M";
+		} else if (number < 1000000000000) {
+			return ((double)number / 1000000000).ToString ("F2") + " B";
+		} else if (number < 1000000000000000) {
+			return ((double)number / 1000000000000).ToString ("F2") + " T";
 		} else {
-			return FormatLong (Convert.ToInt64 (number));
+			return number.ToString ("0.00e0");
 		}
 	}
 
@@ -329,9 +337,9 @@ public class GameController : MonoBehaviour
 				MessagePanelController offlineEarningPanel = uiController.NewMessagePanel ();
 				offlineEarningPanel.SetTitle ("Offline Earning");
 				offlineEarningPanel.SetBody ("While you were away, your workers earned <color=#ff0000ff>"
-					+ FormatDouble (offlineEarning) + "</color> of food.\nLong Live the Chairman!");
+					+ FormatDouble (offlineEarning) + "</color> of food.\n\nLong Live the Chairman!");
 				offlineEarningPanel.SetButtonText ("Long Live!");
-				offlineEarningPanel.SetImage ("Sprites/Upgrade Icons/wheat");
+				offlineEarningPanel.SetIcon ("Sprites/Upgrade Icons/wheat", Color.red);
 			}
 		}
 	}
