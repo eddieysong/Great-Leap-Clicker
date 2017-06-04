@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelController : MonoBehaviour
+public class UpgradeController : MonoBehaviour
 {
 	// handles to other controllers
 	private GameController gameController;
@@ -101,10 +101,10 @@ public class PanelController : MonoBehaviour
 		SetTitle (upgradeName + " - Level <color=#ff0000ff>" + level + "</color>");
 
 		SetBody ("Current Production: <color=#ff0000ff>"
-			+ gameController.FormatDouble (currentProduction * gameController.TotalMultiplier) + "</color>"
+			+ gameController.FormatDouble (currentProduction * gameController.RedBookMultiplier) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\nIncrease after Buy: <color=#ff0000ff>"
-			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.TotalMultiplier) + "</color>"
+			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.RedBookMultiplier) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ ((id == 0) ? "" : "\n<color=#ff0000ff>"
 				+ ((gameController.FoodPerSecond == 0) ? 0 : (currentProduction / gameController.FoodPerSecond * 100)).ToString ("F2")
@@ -144,11 +144,11 @@ public class PanelController : MonoBehaviour
 			+ gameController.FormatDouble (increasePerLevel) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\nGlobal Multiplier: <color=#ff0000ff>"
-			+ gameController.FormatMultiplier (gameController.TotalMultiplier) + "</color>"
+			+ gameController.FormatMultiplier (gameController.RedBookMultiplier) + "</color>"
 			+ "\nUpgrade Level Multiplier: <color=#ff0000ff>"
 			+ gameController.FormatMultiplier (CalcLevelMultiplier(level)) + "</color>"
 			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
-			+ gameController.FormatDouble (increasePerLevel * gameController.TotalMultiplier * CalcLevelMultiplier(level)) + "</color>"
+			+ gameController.FormatDouble (increasePerLevel * gameController.RedBookMultiplier * CalcLevelMultiplier(level)) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\n\nLong Live the Chairman!");
 		msgPanel.SetIcon (icon);
@@ -162,7 +162,7 @@ public class PanelController : MonoBehaviour
 			this.Level += MLBScript.Multiplier;
 
 			// refresh all panels
-			uiController.UpdateUpgradePanels ();
+			uiController.UpdateAllPanels ();
 		}
 	}
 

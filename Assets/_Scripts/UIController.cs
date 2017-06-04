@@ -16,7 +16,8 @@ public class UIController : MonoBehaviour {
 
 	// handles to other controllers
 	private GameController gameController;
-	private PanelController[] upgradePanels;
+	private UpgradeController[] upgradePanels;
+	private PerkController[] perkPanels;
 
 	// handles to UI elements displayed
 	private Text totalDisplay;
@@ -34,7 +35,9 @@ public class UIController : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController> ();
+		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<UpgradeController> ();
+		perkPanels = GameObject.Find ("Main Perk Interface/Viewport/Content").transform.GetComponentsInChildren<PerkController> ();
+
 		totalDisplay = GameObject.Find ("Total Display").GetComponent<Text> ();
 		perClickDisplay = GameObject.Find ("PerClick Display").GetComponent<Text> ();
 		perSecDisplay = GameObject.Find ("PerSec Display").GetComponent<Text> ();
@@ -47,15 +50,18 @@ public class UIController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		totalDisplay.text = gameController.FormatDouble(gameController.TotalFood);
-		perClickDisplay.text = gameController.FormatDouble(gameController.FoodPerClick * gameController.TotalMultiplier);
-		perSecDisplay.text = gameController.FormatDouble(gameController.FoodPerSecond * gameController.TotalMultiplier);
+		perClickDisplay.text = gameController.FormatDouble(gameController.FoodPerClick * gameController.RedBookMultiplier);
+		perSecDisplay.text = gameController.FormatDouble(gameController.FoodPerSecond * gameController.RedBookMultiplier);
 		redBookDisplay.text = gameController.FormatLong(gameController.NumRedBooks);
 		diamondDisplay.text = gameController.NumDiamonds.ToString();
 	}
 
-	public void UpdateUpgradePanels () {
+	public void UpdateAllPanels () {
 		// updates all panels
-		foreach (PanelController panel in upgradePanels) {
+		foreach (UpgradeController panel in upgradePanels) {
+			panel.RefreshPanel ();
+		}
+		foreach (PerkController panel in perkPanels) {
 			panel.RefreshPanel ();
 		}
 	}

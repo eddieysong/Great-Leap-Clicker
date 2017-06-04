@@ -17,9 +17,18 @@ public class GameController : MonoBehaviour
 	private double foodPerSecond = 0;
 
 	private long numRedBooks = 0;
-	private double totalMultiplier = 1;
+	private double redBookMultiplier = 1;
 
 	private long numDiamonds = 0;
+
+	// perk multipliers
+	private double perkClickProdMult = 1;
+	private double perkAutoProdMult = 1;
+	private double perkClickAddPercentAuto = 0; // 0.01 = 1%
+	private double perkRedBookGainMult = 1;
+	private double perkRedBookMultMult = 1;
+
+
 
 	// configuration variables
 	private bool autoSaveEnabled = true;
@@ -28,7 +37,8 @@ public class GameController : MonoBehaviour
 
 	// handles to other controllers
 	private UIController uiController;
-	private PanelController[] upgradePanels;
+	private UpgradeController[] upgradePanels;
+	private PerkController[] perkPanels;
 
 	// helper flag
 	private bool justStarted;
@@ -38,7 +48,8 @@ public class GameController : MonoBehaviour
 	{
 		// store handles to other objects
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
-		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<PanelController> ();
+		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<UpgradeController> ();
+		perkPanels = GameObject.Find ("Main Perk Interface/Viewport/Content").transform.GetComponentsInChildren<PerkController> ();
 	}
 
 	void Start()
@@ -59,11 +70,11 @@ public class GameController : MonoBehaviour
 	void Update ()
 	{
 		// Main income logic here, triggered every frame
-		totalFood += foodPerSecond * Time.deltaTime * totalMultiplier;
+		totalFood += (foodPerSecond * perkAutoProdMult) * Time.deltaTime * redBookMultiplier;
 
 		// testing shortcuts
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			totalFood += foodPerSecond * 3600 * totalMultiplier;
+			totalFood += foodPerSecond * 3600 * redBookMultiplier;
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
@@ -102,13 +113,18 @@ public class GameController : MonoBehaviour
 
 	public void Click ()
 	{
-		totalFood += foodPerClick * totalMultiplier;
+		totalFood += (foodPerClick * perkClickProdMult + foodPerSecond * perkClickAddPercentAuto) * redBookMultiplier;
 	}
 
 	public void SpendFood (double cost)
 	{
 		totalFood -= cost;
 		totalSpent += cost;
+	}
+
+	public void SpendRedBooks (long cost)
+	{
+		numRedBooks -= cost;
 	}
 
 	public void UpdateIncome()
@@ -118,11 +134,35 @@ public class GameController : MonoBehaviour
 		foodPerSecond = 0;
 
 		// updates based on info from all panels
-		foreach (PanelController panel in upgradePanels) {
+		foreach (UpgradeController panel in upgradePanels) {
 			if (panel.Id == 0) {
 				foodPerClick += panel.CurrentProduction;
 			} else {
 				foodPerSecond += panel.CurrentProduction;
+			}
+		}
+	}
+
+	public void UpdatePerkMultipliers()
+	{
+		// updates based on info from all panels
+		foreach (PerkController panel in perkPanels) {
+			switch (panel.Id) {
+			case 0:
+				perkClickProdMult = 1 + panel.CurrentValue;
+				break;
+			case 1:
+				perkAutoProdMult = 1 + panel.CurrentValue;
+				break;
+			case 2:
+				perkClickAddPercentAuto = panel.CurrentValue;
+				break;
+			case 3:
+				perkRedBookGainMult = 1 + panel.CurrentValue;
+				break;
+			case 4:
+				perkRedBookMultMult = 1 + panel.CurrentValue;
+				break;
 			}
 		}
 	}
@@ -134,17 +174,16 @@ public class GameController : MonoBehaviour
 		if (numRedBooks < 0) {
 			numRedBooks = 0;
 		}
-		CalcTotalMultiplier ();
+		CalcRedBookMultiplier ();
 
 	}
 
 	// updates the total multiplier
-	public void CalcTotalMultiplier ()
+	public void CalcRedBookMultiplier ()
 	{
-		totalMultiplier = 1.0;
-		totalMultiplier *= (1 + (double)numRedBooks / 10);
-		Debug.Log ("current multiplier: " + FormatDouble(totalMultiplier));
-		uiController.UpdateUpgradePanels ();
+		redBookMultiplier = (1 + (double)numRedBooks * 0.1 * perkRedBookMultMult);
+		Debug.Log ("current multiplier: " + FormatDouble(redBookMultiplier));
+		uiController.UpdateAllPanels ();
 	}
 
 	// takes a double and returns a simplified string representation
@@ -240,7 +279,7 @@ public class GameController : MonoBehaviour
 
 		long redBooksGained = CalcRedBooksGained ();
 		IncreaseRedBooks (redBooksGained);
-		foreach (PanelController panel in upgradePanels) {
+		foreach (UpgradeController panel in upgradePanels) {
 			panel.Level = 0;
 		}
 		totalFood = 0;
@@ -257,10 +296,11 @@ public class GameController : MonoBehaviour
 		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
 		double totalLevels = 0;
-		foreach (PanelController panel in upgradePanels) {
+		foreach (UpgradeController panel in upgradePanels) {
 			totalLevels += panel.Level;
 		}
 		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 500));
+		redBooksGained = Convert.ToInt64(redBooksGained * perkRedBookGainMult);
 		return redBooksGained;
 	}
 
@@ -281,7 +321,7 @@ public class GameController : MonoBehaviour
 		data.numRedBooks = numRedBooks;
 		data.numDiamonds = numDiamonds;
 		data.timeStamp = DateTime.Now;
-		foreach (PanelController panel in upgradePanels) {
+		foreach (UpgradeController panel in upgradePanels) {
 			data.upgradeLevels.Add (panel.Id, panel.Level);
 		}
 
@@ -306,13 +346,13 @@ public class GameController : MonoBehaviour
 			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
 			numDiamonds = data.numDiamonds;
-			foreach (PanelController panel in upgradePanels) {
+			foreach (UpgradeController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels [panel.Id];
 			}
 
 
 			// updates multiplier and income
-			CalcTotalMultiplier ();
+			CalcRedBookMultiplier ();
 			UpdateIncome ();
 
 			DateTime timeStamp = data.timeStamp;
@@ -329,7 +369,7 @@ public class GameController : MonoBehaviour
 	public void CalcOfflineEarning(double totalSeconds) {
 		if (totalSeconds > 10) {
 			// calculate offline earning
-			double offlineEarning = foodPerSecond * totalSeconds * totalMultiplier;
+			double offlineEarning = foodPerSecond * totalSeconds * redBookMultiplier;
 			totalFood += offlineEarning;
 
 			if (offlineEarning > 0) {
@@ -410,9 +450,9 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	public double TotalMultiplier {
+	public double RedBookMultiplier {
 		get {
-			return this.totalMultiplier;
+			return this.redBookMultiplier;
 		}
 	}
 
