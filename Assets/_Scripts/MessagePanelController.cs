@@ -95,7 +95,7 @@ public class MessagePanelController : MonoBehaviour {
 	}
 
 	public void PopUp() {
-		Debug.Log ("show panel");
+//		Debug.Log ("show panel");
 		animator.SetTrigger ("Show");
 	}
 

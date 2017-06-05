@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour
 	private UpgradeController[] upgradePanels;
 	private PerkController[] perkPanels;
 
+
 	// helper flag
 	private bool justStarted;
 
@@ -70,11 +71,11 @@ public class GameController : MonoBehaviour
 	void Update ()
 	{
 		// Main income logic here, triggered every frame
-		totalFood += (foodPerSecond * perkAutoProdMult) * Time.deltaTime * redBookMultiplier;
+		totalFood += this.FinalFoodPerSecond * Time.deltaTime;
 
 		// testing shortcuts
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			totalFood += foodPerSecond * 3600 * redBookMultiplier;
+			totalFood += this.FinalFoodPerSecond * 3600 ;
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
@@ -113,18 +114,14 @@ public class GameController : MonoBehaviour
 
 	public void Click ()
 	{
-		totalFood += (foodPerClick * perkClickProdMult + foodPerSecond * perkClickAddPercentAuto) * redBookMultiplier;
+		totalFood += this.FinalFoodPerClick;
+		uiController.ShowClickText ();
 	}
 
 	public void SpendFood (double cost)
 	{
 		totalFood -= cost;
 		totalSpent += cost;
-	}
-
-	public void SpendRedBooks (long cost)
-	{
-		numRedBooks -= cost;
 	}
 
 	public void UpdateIncome()
@@ -138,6 +135,7 @@ public class GameController : MonoBehaviour
 			if (panel.Id == 0) {
 				foodPerClick += panel.CurrentProduction;
 			} else {
+//				Debug.Log (panel.CurrentProduction);
 				foodPerSecond += panel.CurrentProduction;
 			}
 		}
@@ -174,17 +172,15 @@ public class GameController : MonoBehaviour
 		if (numRedBooks < 0) {
 			numRedBooks = 0;
 		}
-		CalcRedBookMultiplier ();
-
 	}
 
 	// updates the total multiplier
-	public void CalcRedBookMultiplier ()
-	{
-		redBookMultiplier = (1 + (double)numRedBooks * 0.1 * perkRedBookMultMult);
-		Debug.Log ("current multiplier: " + FormatDouble(redBookMultiplier));
-		uiController.UpdateAllPanels ();
-	}
+//	public void CalcRedBookMultiplier ()
+//	{
+//		redBookMultiplier = 
+//		Debug.Log ("current multiplier: " + FormatDouble(redBookMultiplier));
+//		uiController.UpdateAllPanels ();
+//	}
 
 	// takes a double and returns a simplified string representation
 	public string FormatDouble (double number)
@@ -324,6 +320,9 @@ public class GameController : MonoBehaviour
 		foreach (UpgradeController panel in upgradePanels) {
 			data.upgradeLevels.Add (panel.Id, panel.Level);
 		}
+		foreach (PerkController panel in perkPanels) {
+			data.perkLevels.Add (panel.Id, panel.Level);
+		}
 
 		bf.Serialize (file, data);
 		file.Close ();
@@ -346,18 +345,21 @@ public class GameController : MonoBehaviour
 			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
 			numDiamonds = data.numDiamonds;
+
 			foreach (UpgradeController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels [panel.Id];
 			}
-
+			foreach (PerkController panel in perkPanels) {
+				panel.Level = data.perkLevels [panel.Id];
+			}
 
 			// updates multiplier and income
-			CalcRedBookMultiplier ();
+//			CalcRedBookMultiplier ();
 			UpdateIncome ();
 
 			DateTime timeStamp = data.timeStamp;
 
-			Debug.Log ((DateTime.Now - timeStamp).TotalSeconds);
+			Debug.Log ("Seconds offline: " + (DateTime.Now - timeStamp).TotalSeconds);
 			CalcOfflineEarning ((DateTime.Now - timeStamp).TotalSeconds);
 
 			Debug.Log ("Game loaded!");
@@ -369,7 +371,9 @@ public class GameController : MonoBehaviour
 	public void CalcOfflineEarning(double totalSeconds) {
 		if (totalSeconds > 10) {
 			// calculate offline earning
-			double offlineEarning = foodPerSecond * totalSeconds * redBookMultiplier;
+			UpdateIncome();
+			Debug.Log("f/s: " + this.FinalFoodPerSecond);
+			double offlineEarning = this.FinalFoodPerSecond * totalSeconds;
 			totalFood += offlineEarning;
 
 			if (offlineEarning > 0) {
@@ -452,7 +456,49 @@ public class GameController : MonoBehaviour
 
 	public double RedBookMultiplier {
 		get {
-			return this.redBookMultiplier;
+			return (1 + (double)numRedBooks * 0.1 * perkRedBookMultMult);
+		}
+	}
+
+	public double PerkClickProdMult {
+		get {
+			return this.perkClickProdMult;
+		}
+	}
+
+	public double PerkAutoProdMult {
+		get {
+			return this.perkAutoProdMult;
+		}
+	}
+
+	public double PerkClickAddPercentAuto {
+		get {
+			return this.perkClickAddPercentAuto;
+		}
+	}
+
+	public double PerkRedBookGainMult {
+		get {
+			return this.perkRedBookGainMult;
+		}
+	}
+
+	public double PerkRedBookMultMult {
+		get {
+			return this.perkRedBookMultMult;
+		}
+	}
+
+	public double FinalFoodPerSecond {
+		get {
+			return (foodPerSecond * perkAutoProdMult) * this.RedBookMultiplier;
+		}
+	}
+
+	public double FinalFoodPerClick {
+		get {
+			return (foodPerClick + foodPerSecond * perkAutoProdMult * perkClickAddPercentAuto) * perkClickProdMult * this.RedBookMultiplier;
 		}
 	}
 
@@ -471,4 +517,5 @@ class PlayerData
 	public DateTime timeStamp;
 
 	public Dictionary<int, int> upgradeLevels = new Dictionary<int, int> ();
+	public Dictionary<int, int> perkLevels = new Dictionary<int, int> ();
 }

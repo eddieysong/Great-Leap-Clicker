@@ -11,6 +11,7 @@ public class TabController : MonoBehaviour {
 	private Image image;
 	private GameObject[] scrollableInterfaces;
 	private GameObject[] tabs;
+	private GameObject multiLevelButton;
 
 	[SerializeField]
 	private Sprite buttonImage;
@@ -26,6 +27,7 @@ public class TabController : MonoBehaviour {
 		button = GetComponent<Button> ();
 		image = GetComponent<Image> ();
 		buttonText = transform.Find ("Text").GetComponent<Text> ();
+		multiLevelButton = GameObject.Find ("Multiple Levels Button");
 	}
 
 
@@ -53,6 +55,12 @@ public class TabController : MonoBehaviour {
 			if (tab.GetComponent<TabController> ().InterfaceControlled != interfaceControlled) {
 				tab.GetComponent<TabController> ().SwapImage (false);
 			}
+		}
+
+		if (interfaceControlled == "Main Upgrade Interface") {
+			multiLevelButton.SetActive (true);
+		} else {
+			multiLevelButton.SetActive (false);
 		}
 	}
 

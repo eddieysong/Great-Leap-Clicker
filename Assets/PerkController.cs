@@ -32,13 +32,15 @@ public class PerkController : MonoBehaviour {
 	private string perkName;
 	[SerializeField]
 	private string description;
+	[SerializeField]
+	private string functionDescription;
 		[SerializeField]
 	private double baseCost = 25f;
 		[SerializeField]
 	private double increasePerLevel = 1f;
 
 	// upgrade cost follows the formula: Y = Min(currentLevel, baseCost) * (1 + costPercentIncreasePerLevel) ^ currentLevel
-	private double costPercentIncreasePerLevel = 0.1f;
+	private double costPercentIncreasePerLevel = 0.15f;
 
 	// Use this for initialization
 	void Awake ()
@@ -78,9 +80,12 @@ public class PerkController : MonoBehaviour {
 
 		SetTitle (perkName + " - Level <color=#ff0000ff>" + level + "</color>");
 
-		SetBody ("Increases Total Production by X%");
+		SetBody (functionDescription
+			+ "\nCurrent Increase: <color=#ff0000ff>"
+			+ ((id == 2) ? (this.CurrentValue * 100).ToString("F1") : (this.CurrentValue * 100).ToString("F0"))
+			+ "%</color>");
 
-		SetButtonText (gameController.FormatDouble (this.CurrentCost));
+		SetButtonText (gameController.FormatLong (this.CurrentCost));
 
 	}
 
@@ -110,16 +115,10 @@ public class PerkController : MonoBehaviour {
 		msgPanel.SetTitle (perkName);
 		msgPanel.SetBody(description
 			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString() + "</color>"
-			+ "\nBase Increase/Level: <color=#ff0000ff>"
-			+ gameController.FormatDouble (increasePerLevel) + "</color>"
-			+ ((id == 0) ? "/Click" : "/Second")
-			+ "\nGlobal Multiplier: <color=#ff0000ff>"
-			+ gameController.FormatMultiplier (gameController.RedBookMultiplier) + "</color>"
-			+ "\nUpgrade Level Multiplier: <color=#ff0000ff>"
-			+ gameController.FormatMultiplier (1) + "</color>"
-			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
-			+ gameController.FormatDouble (increasePerLevel * gameController.RedBookMultiplier) + "</color>"
-			+ ((id == 0) ? "/Click" : "/Second")
+			+ "\nIncrease/Level: <color=#ff0000ff>"
+			+ ((id == 2) ? (this.increasePerLevel * 100).ToString("F1") : (this.increasePerLevel * 100).ToString("F0")) + "%</color>"
+			+ "\nTotal Increase: <color=#ff0000ff>"
+			+ ((id == 2) ? (this.CurrentValue * 100).ToString("F1") : (this.CurrentValue * 100).ToString("F0")) + "%</color>"
 			+ "\n\nLong Live the Chairman!");
 		msgPanel.SetIcon (icon);
 		msgPanel.SetButtonText ("Long Live!");
@@ -128,9 +127,9 @@ public class PerkController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (gameController.NumRedBooks >= this.CurrentCost) {
-			gameController.SpendRedBooks (this.CurrentCost);
+			gameController.IncreaseRedBooks (-this.CurrentCost);
 			this.Level++;
-
+			gameController.UpdatePerkMultipliers();
 			// refresh all panels
 			uiController.UpdateAllPanels ();
 		}

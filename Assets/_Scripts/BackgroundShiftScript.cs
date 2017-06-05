@@ -24,7 +24,7 @@ public class BackgroundShiftScript : MonoBehaviour {
 		while (true) {
 			targetPos.x = Random.Range (originalPos.x - maxShiftX, originalPos.x + maxShiftX);
 			targetPos.y = Random.Range (originalPos.y - maxShiftY, originalPos.y + maxShiftY);
-			Debug.Log (targetPos);
+//			Debug.Log (targetPos);
 			yield return new WaitForSeconds (changeDirectionTime);
 		}
 	}

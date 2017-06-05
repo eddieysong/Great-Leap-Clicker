@@ -23,22 +23,22 @@ public class UpgradeController : MonoBehaviour
 	[SerializeField]
 	// id = 0 means click upgrade, id >= 1 && id <= 12 means per second income upgrade
 	private int id;
-//	[SerializeField]
+	//	[SerializeField]
 	private int level;
 	[SerializeField]
 	private string upgradeName;
 	[SerializeField]
 	private string description;
-//	[SerializeField]
+	//	[SerializeField]
 	private double baseCost = 5f;
-//	[SerializeField]
+	//	[SerializeField]
 	private double increasePerLevel = 1f;
 
 	// upgrade cost follows the formula: Y = baseCost * (1 + costPercentIncreasePerLevel) ^ currentLevel
 	// this is A
 	//	public double flatIncreasePerLevel = 1f;
 	// this is B
-//	[SerializeField]
+	//	[SerializeField]
 	private double costPercentIncreasePerLevel = 0.07f;
 	// this is C
 	//	public double expFactorPerLevel = 1.02f;
@@ -69,18 +69,19 @@ public class UpgradeController : MonoBehaviour
 	{
 		// setting upgrade values dynamically through a formula
 		if (id != 0) {
-			baseCost = 50 * Factorial(id) * System.Math.Pow(2, id - 1);
-			increasePerLevel = (0.1 * System.Math.Pow(0.5, id)) * baseCost;
+			baseCost = 50 * Factorial (id) * System.Math.Pow (2, id - 1);
+			increasePerLevel = (0.1 * System.Math.Pow (0.5, id)) * baseCost;
 		}
 		RefreshPanel ();
 	}
 
 	// helper function
-	long Factorial(long n)
+	long Factorial (long n)
 	{
-		if (n >= 2) return n * Factorial(n - 1);
+		if (n >= 2)
+			return n * Factorial (n - 1);
 		return 1;
-	} 
+	}
 
 	// Update is called once per frame
 	void Update ()
@@ -97,18 +98,24 @@ public class UpgradeController : MonoBehaviour
 	{
 		currentCost = CalcCurrentCost ();
 		currentProduction = CalcCurrentProduction (level);
+//		Debug.Log ("currentProduction" + currentProduction);
 		gameController.UpdateIncome ();
 		SetTitle (upgradeName + " - Level <color=#ff0000ff>" + level + "</color>");
 
-		SetBody ("Current Production: <color=#ff0000ff>"
-			+ gameController.FormatDouble (currentProduction * gameController.RedBookMultiplier) + "</color>"
-			+ ((id == 0) ? "/Click" : "/Second")
+		if (id == 0) {
+			SetBody ("Current Production: <color=#ff0000ff>"
+			+ gameController.FormatDouble (currentProduction * gameController.RedBookMultiplier * gameController.PerkClickProdMult) + "</color>/Click"
 			+ "\nIncrease after Buy: <color=#ff0000ff>"
-			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.RedBookMultiplier) + "</color>"
-			+ ((id == 0) ? "/Click" : "/Second")
-			+ ((id == 0) ? "" : "\n<color=#ff0000ff>"
-				+ ((gameController.FoodPerSecond == 0) ? 0 : (currentProduction / gameController.FoodPerSecond * 100)).ToString ("F2")
-				+ "%</color> of Total Income/Second"));
+			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.RedBookMultiplier * gameController.PerkClickProdMult) + "</color>/Click");
+		} else {
+			SetBody ("Current Production: <color=#ff0000ff>"
+			+ gameController.FormatDouble (currentProduction * gameController.RedBookMultiplier * gameController.PerkAutoProdMult) + "</color>/Second"
+			+ "\nIncrease after Buy: <color=#ff0000ff>"
+			+ gameController.FormatDouble ((CalcCurrentProduction (level + MLBScript.Multiplier) - currentProduction) * gameController.RedBookMultiplier * gameController.PerkAutoProdMult) + "</color>/Second"
+			+ "\n<color=#ff0000ff>" + ((gameController.FoodPerSecond == 0) ? 0 : (currentProduction / gameController.FoodPerSecond * 100)).ToString ("F2")
+			+ "%</color> of Total Income/Second");
+		}
+
 
 		SetButtonText ("BUY\n" + gameController.FormatDouble (currentCost));
 
@@ -116,7 +123,7 @@ public class UpgradeController : MonoBehaviour
 
 	public void SetImage (string filePath)
 	{
-		icon.sprite = Resources.Load<Sprite>(filePath);
+		icon.sprite = Resources.Load<Sprite> (filePath);
 	}
 
 	public void SetTitle (string title)
@@ -136,23 +143,25 @@ public class UpgradeController : MonoBehaviour
 
 	public void PanelButtonClick ()
 	{
-		MessagePanelController msgPanel = uiController.NewMessagePanel ();
-		msgPanel.SetTitle (upgradeName);
-		msgPanel.SetBody(description
-			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString() + "</color>"
+		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			MessagePanelController msgPanel = uiController.NewMessagePanel ();
+			msgPanel.SetTitle (upgradeName);
+			msgPanel.SetBody (description
+			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString () + "</color>"
 			+ "\nBase Increase/Level: <color=#ff0000ff>"
 			+ gameController.FormatDouble (increasePerLevel) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\nGlobal Multiplier: <color=#ff0000ff>"
 			+ gameController.FormatMultiplier (gameController.RedBookMultiplier) + "</color>"
 			+ "\nUpgrade Level Multiplier: <color=#ff0000ff>"
-			+ gameController.FormatMultiplier (CalcLevelMultiplier(level)) + "</color>"
+			+ gameController.FormatMultiplier (CalcLevelMultiplier (level)) + "</color>"
 			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
-			+ gameController.FormatDouble (increasePerLevel * gameController.RedBookMultiplier * CalcLevelMultiplier(level)) + "</color>"
+			+ gameController.FormatDouble (increasePerLevel * gameController.RedBookMultiplier * CalcLevelMultiplier (level)) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\n\nLong Live the Chairman!");
-		msgPanel.SetIcon (icon);
-		msgPanel.SetButtonText ("Long Live!");
+			msgPanel.SetIcon (icon);
+			msgPanel.SetButtonText ("Long Live!");
+		}
 	}
 
 	public void ButtonClick ()
