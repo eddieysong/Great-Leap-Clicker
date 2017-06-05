@@ -18,7 +18,8 @@ public class MessagePanelController : MonoBehaviour {
 	private Text buttonText;
 	private Button outside;
 
-	private string callBackParameter;
+	private string callBackFunctionName;
+	private int [] callBackParameter;
 
 	// Use this for initialization
 	void Awake ()
@@ -35,8 +36,6 @@ public class MessagePanelController : MonoBehaviour {
 		button.onClick.AddListener (ButtonClick);
 		outside.onClick.AddListener (OutsideClick);
 
-
-		RefreshPanelText ();
 	}
 
 	// Update is called once per frame
@@ -45,11 +44,6 @@ public class MessagePanelController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.T)) {
 			PopUp ();
 		}
-	}
-
-	public void RefreshPanelText ()
-	{
-
 	}
 
 	public void SetIcon (Image image)
@@ -82,7 +76,7 @@ public class MessagePanelController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
-			gameController.SendMessage (callBackParameter, SendMessageOptions.DontRequireReceiver);
+			gameController.SendMessage (callBackFunctionName, callBackParameter, SendMessageOptions.DontRequireReceiver);
 			StartCoroutine(FadeOut ());
 		}
 	}
@@ -109,7 +103,16 @@ public class MessagePanelController : MonoBehaviour {
 	}
 
 	// getters and setters
-	public string CallBackParameter {
+	public string CallBackFunctionName {
+		get {
+			return this.callBackFunctionName;
+		}
+		set {
+			callBackFunctionName = value;
+		}
+	}
+
+	public int [] CallBackParameter {
 		get {
 			return this.callBackParameter;
 		}

@@ -121,11 +121,6 @@ public class UpgradeController : MonoBehaviour
 
 	}
 
-	public void SetImage (string filePath)
-	{
-		icon.sprite = Resources.Load<Sprite> (filePath);
-	}
-
 	public void SetTitle (string title)
 	{
 		this.title.text = title;

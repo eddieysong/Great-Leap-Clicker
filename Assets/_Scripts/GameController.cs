@@ -29,7 +29,6 @@ public class GameController : MonoBehaviour
 	private double perkRedBookMultMult = 1;
 
 
-
 	// configuration variables
 	private bool autoSaveEnabled = true;
 	private int secondsBetweenAutoSaving = 30;
@@ -174,6 +173,14 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	public void IncreaseDiamonds (long amount)
+	{
+		numDiamonds += amount;
+		if (numDiamonds < 0) {
+			numDiamonds = 0;
+		}
+	}
+
 	// updates the total multiplier
 //	public void CalcRedBookMultiplier ()
 //	{
@@ -273,8 +280,7 @@ public class GameController : MonoBehaviour
 	// gains redbooks according to total food produced
 	public void ResetGame () {
 
-		long redBooksGained = CalcRedBooksGained ();
-		IncreaseRedBooks (redBooksGained);
+		IncreaseRedBooks (CalcRedBooksGained ());
 		foreach (UpgradeController panel in upgradePanels) {
 			panel.Level = 0;
 		}
@@ -300,10 +306,29 @@ public class GameController : MonoBehaviour
 		return redBooksGained;
 	}
 
+	// diamond bonuses
 
+	public void LeapForward (int [] info) {
+		if (numDiamonds >= info[0]) {
+			IncreaseDiamonds (-info [0]);
+			totalFood += this.FinalFoodPerSecond * 3600 * info[1] ;
+		}
+	}
+
+	public void Revolution (int [] info) {
+		if (numDiamonds >= info [0]) {
+			IncreaseDiamonds (-info [0]);
+			IncreaseRedBooks (CalcRedBooksGained () * info [1]);
+			totalFood = 0;
+			totalSpent = 0;
+
+			Save ();
+		}
+	}
 
 
 	// save and load functions
+
 	public void Save()
 	{
 		Debug.Log ("Saving game...");
@@ -512,7 +537,6 @@ class PlayerData
 	public double totalSpent;
 	public long numRedBooks;
 	public long numDiamonds;
-	//public int numDiamonds;
 
 	public DateTime timeStamp;
 
