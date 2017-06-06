@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
 	private long numRedBooks = 0;
 	private double redBookMultiplier = 1;
 
-	private long numDiamonds = 0;
+	private long numDiamonds = 100000; // change back when done testing
 
 	// perk multipliers
 	private double perkClickProdMult = 1;

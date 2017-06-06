@@ -143,14 +143,14 @@ public class UpgradeController : MonoBehaviour
 			msgPanel.SetTitle (upgradeName);
 			msgPanel.SetBody (description
 			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString () + "</color>"
-			+ "\nBase Increase/Level: <color=#ff0000ff>"
+			+ "\nBase Inc./Level: <color=#ff0000ff>"
 			+ gameController.FormatDouble (increasePerLevel) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\nGlobal Multiplier: <color=#ff0000ff>"
 			+ gameController.FormatMultiplier (gameController.RedBookMultiplier) + "</color>"
 			+ "\nUpgrade Level Multiplier: <color=#ff0000ff>"
 			+ gameController.FormatMultiplier (CalcLevelMultiplier (level)) + "</color>"
-			+ "\nCurrent Increase/Level: <color=#ff0000ff>"
+			+ "\nCurrent Inc./Level: <color=#ff0000ff>"
 			+ gameController.FormatDouble (increasePerLevel * gameController.RedBookMultiplier * CalcLevelMultiplier (level)) + "</color>"
 			+ ((id == 0) ? "/Click" : "/Second")
 			+ "\n\nLong Live the Chairman!");
