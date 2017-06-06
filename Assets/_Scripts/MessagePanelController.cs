@@ -18,6 +18,8 @@ public class MessagePanelController : MonoBehaviour {
 	private Text buttonText;
 	private Button outside;
 
+	private ScrollRect scrollRect;
+
 	private string callBackFunctionName;
 	private int [] callBackParameter;
 
@@ -29,7 +31,8 @@ public class MessagePanelController : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		icon = transform.Find ("Icon").GetComponent<Image> ();
 		title = transform.Find ("Title").GetComponent<Text> ();
-		body = transform.Find ("Body").GetComponent<Text> ();
+		scrollRect = transform.Find ("Scroll View").GetComponent<ScrollRect> ();
+		body = transform.Find ("Scroll View").GetComponentInChildren<Text> ();
 		button = transform.Find ("Button").GetComponent<Button> ();
 		outside = transform.Find ("Outside").GetComponent<Button> ();
 		buttonText = button.transform.Find ("Text").GetComponent<Text> ();
@@ -65,7 +68,9 @@ public class MessagePanelController : MonoBehaviour {
 
 	public void SetBody (string body)
 	{
+//		scrollRect.enabled = false;
 		this.body.text = body;
+//		scrollRect.enabled = true;
 	}
 
 	public void SetButtonText (string text)

@@ -84,7 +84,8 @@ public class GameController : MonoBehaviour
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
-			uiController.NewMessagePanel ();
+			MessagePanelController asd = uiController.NewMessagePanel ();
+			asd.SetBody("asd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\n");
 		}
 
 		if (Input.GetKeyDown (KeyCode.R)) {
