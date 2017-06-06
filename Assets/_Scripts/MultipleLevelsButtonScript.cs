@@ -13,12 +13,14 @@ public class MultipleLevelsButtonScript : MonoBehaviour {
 	private Text buttonText;
 
 	// handles to other controllers
+	private GameController gameController;
 	private UIController uiController;
 
 	// Use this for initialization
 	void Awake () {
 		
 		// store handles to other objects
+		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
 		button = GetComponent<Button> ();
 		buttonText = transform.Find ("Text").GetComponent<Text> ();
@@ -27,7 +29,8 @@ public class MultipleLevelsButtonScript : MonoBehaviour {
 	}
 
 	public void ButtonClick () {
-		
+		gameController.PlayClickSound2 ();
+
 		// updates multiplier button
 		if (multiplier == 1) {
 			multiplier = 10;

@@ -106,6 +106,7 @@ public class PerkController : MonoBehaviour {
 
 	public void PanelButtonClick ()
 	{
+		gameController.PlayClickSound2 ();
 		MessagePanelController msgPanel = uiController.NewMessagePanel ();
 		msgPanel.SetTitle (perkName);
 		msgPanel.SetBody(description
@@ -122,6 +123,8 @@ public class PerkController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (gameController.NumRedBooks >= this.CurrentCost) {
+			gameController.PlayClickSound2 ();
+
 			gameController.IncreaseRedBooks (-this.CurrentCost);
 			this.Level++;
 			gameController.UpdatePerkMultipliers();

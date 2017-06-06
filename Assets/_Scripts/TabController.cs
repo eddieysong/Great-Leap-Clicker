@@ -22,8 +22,11 @@ public class TabController : MonoBehaviour {
 	[SerializeField]
 	private string interfaceControlled;
 
+	private GameController gameController;
+
 
 	void Awake () {
+		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		button = GetComponent<Button> ();
 		image = GetComponent<Image> ();
 		buttonText = transform.Find ("Text").GetComponent<Text> ();
@@ -43,6 +46,8 @@ public class TabController : MonoBehaviour {
 	}
 	
 	public void ButtonClick () {
+		gameController.PlayClickSound2 ();
+
 		foreach (GameObject sInterface in scrollableInterfaces) {
 			if (sInterface.name != interfaceControlled) {
 				sInterface.SetActive (false);

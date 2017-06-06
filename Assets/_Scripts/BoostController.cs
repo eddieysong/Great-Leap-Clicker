@@ -119,6 +119,7 @@ public class BoostController : MonoBehaviour {
 
 	public void PanelButtonClick ()
 	{
+		gameController.PlayClickSound2 ();
 		MessagePanelController msgPanel = uiController.NewMessagePanel ();
 		msgPanel.SetTitle ("<color=#ff0000ff>" + boostName + "</color>");
 		msgPanel.SetBody(description
@@ -131,6 +132,8 @@ public class BoostController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (gameController.NumDiamonds >= cost) {
+			gameController.PlayClickSound2 ();
+
 			switch (id) {
 			case 0:
 			case 1:

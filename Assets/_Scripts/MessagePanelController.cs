@@ -76,6 +76,7 @@ public class MessagePanelController : MonoBehaviour {
 	public void ButtonClick ()
 	{
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName("Visible")) {
+			gameController.PlayClickSound2 ();
 			gameController.SendMessage (callBackFunctionName, callBackParameter, SendMessageOptions.DontRequireReceiver);
 			StartCoroutine(FadeOut ());
 		}

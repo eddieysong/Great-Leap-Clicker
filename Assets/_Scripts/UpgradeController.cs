@@ -46,6 +46,7 @@ public class UpgradeController : MonoBehaviour
 	private double currentCost;
 	private double currentProduction;
 
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -139,6 +140,7 @@ public class UpgradeController : MonoBehaviour
 	public void PanelButtonClick ()
 	{
 		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			gameController.PlayClickSound2 ();
 			MessagePanelController msgPanel = uiController.NewMessagePanel ();
 			msgPanel.SetTitle (upgradeName);
 			msgPanel.SetBody (description
@@ -162,6 +164,7 @@ public class UpgradeController : MonoBehaviour
 	public void ButtonClick ()
 	{
 		if (gameController.TotalFood >= currentCost) {
+			gameController.PlayClickSound2 ();
 			gameController.SpendFood (currentCost);
 			this.Level += MLBScript.Multiplier;
 

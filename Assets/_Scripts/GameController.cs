@@ -39,6 +39,11 @@ public class GameController : MonoBehaviour
 	private UpgradeController[] upgradePanels;
 	private PerkController[] perkPanels;
 
+	// clicking sounds
+	[SerializeField]
+	private AudioClip clickSound1, clickSound2;
+	private AudioSource camAudioSource;
+
 
 	// helper flag
 	private bool justStarted;
@@ -50,6 +55,7 @@ public class GameController : MonoBehaviour
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
 		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<UpgradeController> ();
 		perkPanels = GameObject.Find ("Main Perk Interface/Viewport/Content").transform.GetComponentsInChildren<PerkController> ();
+		camAudioSource = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<AudioSource> ();
 	}
 
 	void Start()
@@ -115,6 +121,15 @@ public class GameController : MonoBehaviour
 	{
 		totalFood += this.FinalFoodPerClick;
 		uiController.ShowClickText ();
+		PlayClickSound1 ();
+	}
+
+	public void PlayClickSound1() {
+		camAudioSource.PlayOneShot (clickSound1);
+	}
+
+	public void PlayClickSound2() {
+		camAudioSource.PlayOneShot (clickSound2);
 	}
 
 	public void SpendFood (double cost)

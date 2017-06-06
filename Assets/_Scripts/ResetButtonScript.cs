@@ -49,6 +49,7 @@ public class ResetButtonScript : MonoBehaviour {
 	public void ButtonClick () {
 
 		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			gameController.PlayClickSound2 ();
 			if (msgPanelController = uiController.NewMessagePanel ()) {
 				msgPanelController.SetTitle ("A New Start");
 //			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels and skill levels to be reset.\n\n " +
