@@ -45,8 +45,14 @@ public class MessagePanelController : MonoBehaviour {
 	void Update ()
 	{
 		if (Input.GetKeyDown (KeyCode.T)) {
-			PopUp ();
+			
 		}
+	}
+
+	// A hacky solution to the scroll view issue where it auto scrolls to bottom on PopUp()
+	// This function is called by an event about 1/6 of the way into the animation, and it stops the scroll bar from moving down
+	public void ResetScrollPosition () {
+		scrollRect.verticalNormalizedPosition = 1;
 	}
 
 	public void SetIcon (Image image)

@@ -119,14 +119,15 @@ public class BoostController : MonoBehaviour {
 
 	public void PanelButtonClick ()
 	{
-		gameController.PlayClickSound2 ();
-		MessagePanelController msgPanel = uiController.NewMessagePanel ();
-		msgPanel.SetTitle ("<color=#ff0000ff>" + boostName + "</color>");
-		msgPanel.SetBody(description
+		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			gameController.PlayClickSound2 ();
+			MessagePanelController msgPanel = uiController.NewMessagePanel ();
+			msgPanel.SetTitle ("<color=#ff0000ff>" + boostName + "</color>");
+			msgPanel.SetBody (description
 			+ "\n\nLong Live the Chairman!");
-		msgPanel.SetIcon (icon);
-		msgPanel.SetButtonText ("Long Live!");
-
+			msgPanel.SetIcon (icon);
+			msgPanel.SetButtonText ("Long Live!");
+		}
 	}
 
 	public void ButtonClick ()

@@ -106,18 +106,20 @@ public class PerkController : MonoBehaviour {
 
 	public void PanelButtonClick ()
 	{
-		gameController.PlayClickSound2 ();
-		MessagePanelController msgPanel = uiController.NewMessagePanel ();
-		msgPanel.SetTitle (perkName);
-		msgPanel.SetBody(description
-			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString() + "</color>"
+		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			gameController.PlayClickSound2 ();
+			MessagePanelController msgPanel = uiController.NewMessagePanel ();
+			msgPanel.SetTitle (perkName);
+			msgPanel.SetBody (description
+			+ "\n\nCurrent Level: <color=#ff0000ff>" + level.ToString () + "</color>"
 			+ "\nIncrease/Level: <color=#ff0000ff>"
-			+ ((id == 2) ? (this.increasePerLevel * 100).ToString("F1") : (this.increasePerLevel * 100).ToString("F0")) + "%</color>"
+			+ ((id == 2) ? (this.increasePerLevel * 100).ToString ("F1") : (this.increasePerLevel * 100).ToString ("F0")) + "%</color>"
 			+ "\nTotal Increase: <color=#ff0000ff>"
-			+ ((id == 2) ? (this.CurrentValue * 100).ToString("F1") : (this.CurrentValue * 100).ToString("F0")) + "%</color>"
+			+ ((id == 2) ? (this.CurrentValue * 100).ToString ("F1") : (this.CurrentValue * 100).ToString ("F0")) + "%</color>"
 			+ "\n\nLong Live the Chairman!");
-		msgPanel.SetIcon (icon);
-		msgPanel.SetButtonText ("Long Live!");
+			msgPanel.SetIcon (icon);
+			msgPanel.SetButtonText ("Long Live!");
+		}
 	}
 
 	public void ButtonClick ()
