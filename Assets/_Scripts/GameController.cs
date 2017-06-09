@@ -17,9 +17,10 @@ public class GameController : MonoBehaviour
 	private double foodPerSecond = 0;
 
 	private long numRedBooks = 0;
+	private double redBookMultPerBook = 0.02;
 	private double redBookMultiplier = 1;
 
-	private long numDiamonds = 100000; // change back when done testing
+	private long numDiamonds = 0; // change back when done testing
 
 	// perk multipliers
 	private double perkClickProdMult = 1;
@@ -343,6 +344,13 @@ public class GameController : MonoBehaviour
 	}
 
 
+	// switches to diamond purchase panel
+	public void SwitchToDiamondPurchase() {
+		// selects the upgrades tab by default
+		GameObject.Find("IAP Tab").GetComponent<TabController>().ButtonClick();
+	}
+
+
 	// save and load functions
 
 	public void Save()
@@ -497,7 +505,7 @@ public class GameController : MonoBehaviour
 
 	public double RedBookMultiplier {
 		get {
-			return (1 + (double)numRedBooks * 0.1 * perkRedBookMultMult);
+			return (1 + (double)numRedBooks * redBookMultPerBook * perkRedBookMultMult);
 		}
 	}
 
@@ -543,6 +551,11 @@ public class GameController : MonoBehaviour
 		}
 	}
 
+	public double RedBookMultPerBook {
+		get {
+			return this.redBookMultPerBook;
+		}
+	}
 }
 
 // class to hold save file data
