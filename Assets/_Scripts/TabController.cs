@@ -62,10 +62,20 @@ public class TabController : MonoBehaviour {
 			}
 		}
 
+		// enable mult-level button if buying upgrades
 		if (interfaceControlled == "Main Upgrade Interface") {
 			multiLevelButton.SetActive (true);
 		} else {
 			multiLevelButton.SetActive (false);
+		}
+
+		// tutorial panel pop-ups
+		if (interfaceControlled == "Main Perk Interface") {
+			GameObject.Find ("TutorialController").SendMessage ("TutorialPerks", SendMessageOptions.DontRequireReceiver);
+		} else if (interfaceControlled == "Main Boost Interface") {
+			GameObject.Find ("TutorialController").SendMessage ("TutorialBoosts", SendMessageOptions.DontRequireReceiver);
+		} else if (interfaceControlled == "Main IAP Interface") {
+			GameObject.Find ("TutorialController").SendMessage ("TutorialDiamonds", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 

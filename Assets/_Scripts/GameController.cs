@@ -39,6 +39,7 @@ public class GameController : MonoBehaviour
 	private UIController uiController;
 	private UpgradeController[] upgradePanels;
 	private PerkController[] perkPanels;
+	private TutorialController tutorialController;
 
 	// clicking sounds
 	[SerializeField]
@@ -47,7 +48,11 @@ public class GameController : MonoBehaviour
 
 
 	// helper flag
-	private bool justStarted;
+	// flag to stop OnApplicationPause to load the game again
+	private bool justStarted = true;
+
+	// tutorial is on by default
+	private bool tutorialOn = true;
 
 
 	void Awake ()
@@ -57,15 +62,17 @@ public class GameController : MonoBehaviour
 		upgradePanels = GameObject.Find ("Main Upgrade Interface/Viewport/Content").transform.GetComponentsInChildren<UpgradeController> ();
 		perkPanels = GameObject.Find ("Main Perk Interface/Viewport/Content").transform.GetComponentsInChildren<PerkController> ();
 		camAudioSource = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<AudioSource> ();
+		tutorialController = GameObject.Find ("TutorialController").GetComponent<TutorialController> ();
 	}
 
 	void Start()
-	{		
-		// flag to stop OnApplicationPause to load the game again
-		justStarted = true;
-
+	{
 		// load game from file
 		Load ();
+
+		if (tutorialOn) {
+			tutorialController.enabled = true;
+		}
 
 		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
@@ -81,12 +88,13 @@ public class GameController : MonoBehaviour
 
 		// testing shortcuts
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			totalFood += this.FinalFoodPerSecond * 3600 ;
+			Debug.Log("Tutorial on? " + tutorialOn.ToString());
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			MessagePanelController asd = uiController.NewMessagePanel ();
 			asd.SetBody("asd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\nasd\n");
+			asd.SetIcon ("Sprites/Upgrade Icons/grapes", Color.white);
 		}
 
 		if (Input.GetKeyDown (KeyCode.R)) {
@@ -303,6 +311,7 @@ public class GameController : MonoBehaviour
 		}
 		totalFood = 0;
 		totalSpent = 0;
+		tutorialOn = false;
 
 		Save ();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -318,7 +327,7 @@ public class GameController : MonoBehaviour
 		foreach (UpgradeController panel in upgradePanels) {
 			totalLevels += panel.Level;
 		}
-		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 500));
+		redBooksGained += Convert.ToInt64 (Math.Floor (totalLevels / 250));
 		redBooksGained = Convert.ToInt64(redBooksGained * perkRedBookGainMult);
 		return redBooksGained;
 	}
@@ -365,6 +374,9 @@ public class GameController : MonoBehaviour
 		data.totalSpent = totalSpent;
 		data.numRedBooks = numRedBooks;
 		data.numDiamonds = numDiamonds;
+
+		data.tutorialOn = tutorialOn;
+
 		data.timeStamp = DateTime.Now;
 		foreach (UpgradeController panel in upgradePanels) {
 			data.upgradeLevels.Add (panel.Id, panel.Level);
@@ -394,6 +406,8 @@ public class GameController : MonoBehaviour
 			totalSpent = data.totalSpent;
 			numRedBooks = data.numRedBooks;
 			numDiamonds = data.numDiamonds;
+
+			tutorialOn = data.tutorialOn;
 
 			foreach (UpgradeController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels [panel.Id];
@@ -556,6 +570,15 @@ public class GameController : MonoBehaviour
 			return this.redBookMultPerBook;
 		}
 	}
+
+	public bool TutorialOn {
+		get {
+			return this.tutorialOn;
+		}
+		set {
+			tutorialOn = value;
+		}
+	}
 }
 
 // class to hold save file data
@@ -566,6 +589,8 @@ class PlayerData
 	public double totalSpent;
 	public long numRedBooks;
 	public long numDiamonds;
+
+	public bool tutorialOn;
 
 	public DateTime timeStamp;
 

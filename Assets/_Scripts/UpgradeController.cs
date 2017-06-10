@@ -10,6 +10,7 @@ public class UpgradeController : MonoBehaviour
 	private UIController uiController;
 	private MultipleLevelsButtonScript MLBScript;
 	private ResetButtonScript RBScript;
+	private TutorialController tutorialController;
 
 	// handles to UI elements displayed
 	private Button panelButton;
@@ -54,6 +55,7 @@ public class UpgradeController : MonoBehaviour
 		uiController = GameObject.FindGameObjectWithTag ("UIController").GetComponent<UIController> ();
 		MLBScript = GameObject.Find ("Multiple Levels Button").GetComponent<MultipleLevelsButtonScript> ();
 		RBScript = GameObject.Find ("Reset Button").GetComponent<ResetButtonScript> ();
+		tutorialController = GameObject.Find ("TutorialController").GetComponent<TutorialController> ();
 		//		Debug.Log (id.ToString () + "panel" + MLBScript.Multiplier.ToString () + "mlb loaded");
 		panelButton = transform.Find ("Panel Button").GetComponent<Button> ();
 		icon = transform.Find ("Icon").GetComponent<Image> ();
@@ -185,10 +187,10 @@ public class UpgradeController : MonoBehaviour
 		return increasePerLevel * level * CalcLevelMultiplier (level);
 	}
 
-	// every 25 levels increase production by a factor of 2x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
+	// every 25 levels increase production by a factor of 1.5x, every 100 levels = 2x, every 250 levels = 4x, every 1000 levels = 10x
 	public double CalcLevelMultiplier (int level)
 	{
-		return System.Math.Pow (2, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
+		return System.Math.Pow (1.5, (level / 25)) * System.Math.Pow (2, (level / 100)) * System.Math.Pow (4, (level / 250)) * System.Math.Pow (10, (level / 1000));
 	}
 
 	// helper method, returns the sum of the first n terms of a geometric series with ratio r
@@ -215,6 +217,22 @@ public class UpgradeController : MonoBehaviour
 			// activates reset button as soon as honey farm is purchased
 			if (id == 12 && level > 0) {
 				RBScript.Activate ();
+				tutorialController.SendMessage ("TutorialReset", SendMessageOptions.DontRequireReceiver);
+			}
+
+			// sends a message to tutorial controller to display the next tutorial
+			if (gameController.TutorialOn && id == 0 && level > 0) {
+				tutorialController.SendMessage ("TutorialClickUpgradeDone", SendMessageOptions.DontRequireReceiver);
+			}
+
+			// sends a message to tutorial controller to display the next tutorial
+			if (gameController.TutorialOn && id == 1 && level > 0) {
+				tutorialController.SendMessage ("TutorialAutoUpgradeDone", SendMessageOptions.DontRequireReceiver);
+			}
+
+			// sends a message to tutorial controller to display the next tutorial
+			if (gameController.TutorialOn && level >= 25) {
+				tutorialController.SendMessage ("TutorialLevelMult", SendMessageOptions.DontRequireReceiver);
 			}
 		}
 	}
