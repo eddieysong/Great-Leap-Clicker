@@ -153,7 +153,7 @@ public class TutorialController : MonoBehaviour {
 			msgPanel.SetTitle ("Level Multiplier");
 			msgPanel.SetBody ("Comrade, one of your upgrades has gained a level multiplier!\n\n" +
 			"Upgrades will gain level multipliers every time you reach a milestone in upgrade level.\n\n" +
-			"Every 25 levels increases the upgrade's production by 50%, every 100 levels doubles production, every 250 levels quadruples production, and every 1000 levels increases production ten-fold!");
+				"Every 25 levels double the upgrade's production, every 100 levels quadruples production, every 250 levels increase production by 10x, and every 1000 levels increases production by 100x!");
 			msgPanel.SetIcon ("Sprites/UI/info", Color.yellow);
 			msgPanel.SetButtonText ("Understood!");
 			tutorialFlags["levelMult"] = true;

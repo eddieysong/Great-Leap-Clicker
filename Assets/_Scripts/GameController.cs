@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
 	private double foodPerSecond = 0;
 
 	private long numRedBooks = 0;
-	private double redBookMultPerBook = 0.02;
+	private double redBookMultPerBook = 0.1;
 	private double redBookMultiplier = 1;
 
 	private long numDiamonds = 0; // change back when done testing
@@ -319,7 +319,10 @@ public class GameController : MonoBehaviour
 	public long CalcRedBooksGained () {
 
 		long redBooksGained = 0;
-		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
+		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (16, (Math.Sqrt (Math.Log10(totalFood + totalSpent)) - 2))));
+//		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (10, (Math.Sqrt (Math.Log10(totalFood + totalSpent)) - 2))));
+//		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.4, (Math.Log10 (Math.Sqrt(totalFood + totalSpent))))));
+//		redBooksGained +=  Convert.ToInt64(Math.Floor (Math.Pow (1.5, (Math.Log10 ((totalFood + totalSpent) / 1000000000)))));
 
 		double totalLevels = 0;
 		foreach (UpgradeController panel in upgradePanels) {

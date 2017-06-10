@@ -202,10 +202,10 @@ public class UpgradeController : MonoBehaviour
 		return increasePerLevel * level * CalcLevelMultiplier (level);
 	}
 
-	// every 25 levels increase production by a factor of 1.5x, every 100 levels = 2x, every 250 levels = 4x, every 1000 levels = 10x
+	// every 25 levels increase production by a factor of 2x, every 100 levels = 4x, every 250 levels = 10x, every 1000 levels = 100x
 	public double CalcLevelMultiplier (int level)
 	{
-		return System.Math.Pow (1.5, (level / 25)) * System.Math.Pow (2, (level / 100)) * System.Math.Pow (4, (level / 250)) * System.Math.Pow (10, (level / 1000));
+		return System.Math.Pow (2, (level / 25)) * System.Math.Pow (4, (level / 100)) * System.Math.Pow (10, (level / 250)) * System.Math.Pow (100, (level / 1000));
 	}
 
 	// helper method, returns the sum of the first n terms of a geometric series with ratio r
