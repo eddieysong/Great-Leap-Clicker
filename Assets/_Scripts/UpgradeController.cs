@@ -170,6 +170,21 @@ public class UpgradeController : MonoBehaviour
 			gameController.SpendFood (currentCost);
 			this.Level += MLBScript.Multiplier;
 
+			// sends a message to tutorial controller to display the next tutorial
+			if (id == 0 && level > 0) {
+				tutorialController.SendMessage ("TutorialClickUpgradeDone", SendMessageOptions.DontRequireReceiver);
+			}
+
+			// sends a message to tutorial controller to display the next tutorial
+			if (id == 1 && level > 0) {
+				tutorialController.SendMessage ("TutorialAutoUpgradeDone", SendMessageOptions.DontRequireReceiver);
+			}
+
+			// sends a message to tutorial controller to display the next tutorial
+			if (level >= 25) {
+				tutorialController.SendMessage ("TutorialLevelMult", SendMessageOptions.DontRequireReceiver);
+			}
+
 			// refresh all panels
 			uiController.UpdateAllPanels ();
 		}
@@ -218,21 +233,6 @@ public class UpgradeController : MonoBehaviour
 			if (id == 12 && level > 0) {
 				RBScript.Activate ();
 				tutorialController.SendMessage ("TutorialReset", SendMessageOptions.DontRequireReceiver);
-			}
-
-			// sends a message to tutorial controller to display the next tutorial
-			if (gameController.TutorialOn && id == 0 && level > 0) {
-				tutorialController.SendMessage ("TutorialClickUpgradeDone", SendMessageOptions.DontRequireReceiver);
-			}
-
-			// sends a message to tutorial controller to display the next tutorial
-			if (gameController.TutorialOn && id == 1 && level > 0) {
-				tutorialController.SendMessage ("TutorialAutoUpgradeDone", SendMessageOptions.DontRequireReceiver);
-			}
-
-			// sends a message to tutorial controller to display the next tutorial
-			if (gameController.TutorialOn && level >= 25) {
-				tutorialController.SendMessage ("TutorialLevelMult", SendMessageOptions.DontRequireReceiver);
 			}
 		}
 	}

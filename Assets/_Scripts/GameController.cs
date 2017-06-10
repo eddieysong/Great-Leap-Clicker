@@ -48,11 +48,7 @@ public class GameController : MonoBehaviour
 
 
 	// helper flag
-	// flag to stop OnApplicationPause to load the game again
-	private bool justStarted = true;
-
-	// tutorial is on by default
-	private bool tutorialOn = true;
+	private bool justStarted;
 
 
 	void Awake ()
@@ -70,9 +66,8 @@ public class GameController : MonoBehaviour
 		// load game from file
 		Load ();
 
-		if (tutorialOn) {
-			tutorialController.enabled = true;
-		}
+		// flag to stop OnApplicationPause from loading the game again
+		justStarted = true;
 
 		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
@@ -88,7 +83,11 @@ public class GameController : MonoBehaviour
 
 		// testing shortcuts
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			Debug.Log("Tutorial on? " + tutorialOn.ToString());
+			Debug.Log ("tutorial flags:");
+			foreach (KeyValuePair<string, bool> pair in tutorialController.TutorialFlags) {
+				Debug.Log(pair.Key.ToString() + " - " + pair.Value.ToString());
+			}
+
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
@@ -311,7 +310,6 @@ public class GameController : MonoBehaviour
 		}
 		totalFood = 0;
 		totalSpent = 0;
-		tutorialOn = false;
 
 		Save ();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -375,7 +373,7 @@ public class GameController : MonoBehaviour
 		data.numRedBooks = numRedBooks;
 		data.numDiamonds = numDiamonds;
 
-		data.tutorialOn = tutorialOn;
+		data.tutorialFlags = tutorialController.TutorialFlags;
 
 		data.timeStamp = DateTime.Now;
 		foreach (UpgradeController panel in upgradePanels) {
@@ -407,7 +405,7 @@ public class GameController : MonoBehaviour
 			numRedBooks = data.numRedBooks;
 			numDiamonds = data.numDiamonds;
 
-			tutorialOn = data.tutorialOn;
+			tutorialController.TutorialFlags = data.tutorialFlags;
 
 			foreach (UpgradeController panel in upgradePanels) {
 				panel.Level = data.upgradeLevels [panel.Id];
@@ -570,15 +568,6 @@ public class GameController : MonoBehaviour
 			return this.redBookMultPerBook;
 		}
 	}
-
-	public bool TutorialOn {
-		get {
-			return this.tutorialOn;
-		}
-		set {
-			tutorialOn = value;
-		}
-	}
 }
 
 // class to hold save file data
@@ -590,10 +579,9 @@ class PlayerData
 	public long numRedBooks;
 	public long numDiamonds;
 
-	public bool tutorialOn;
-
 	public DateTime timeStamp;
 
 	public Dictionary<int, int> upgradeLevels = new Dictionary<int, int> ();
 	public Dictionary<int, int> perkLevels = new Dictionary<int, int> ();
+	public Dictionary<string, bool> tutorialFlags = new Dictionary<string, bool> ();
 }

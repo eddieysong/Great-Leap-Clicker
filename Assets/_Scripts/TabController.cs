@@ -23,10 +23,11 @@ public class TabController : MonoBehaviour {
 	private string interfaceControlled;
 
 	private GameController gameController;
-
+	private TutorialController tutorialController;
 
 	void Awake () {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		tutorialController = GameObject.Find ("TutorialController").GetComponent<TutorialController> ();
 		button = GetComponent<Button> ();
 		image = GetComponent<Image> ();
 		buttonText = transform.Find ("Text").GetComponent<Text> ();
@@ -71,11 +72,11 @@ public class TabController : MonoBehaviour {
 
 		// tutorial panel pop-ups
 		if (interfaceControlled == "Main Perk Interface") {
-			GameObject.Find ("TutorialController").SendMessage ("TutorialPerks", SendMessageOptions.DontRequireReceiver);
+			tutorialController.SendMessage ("TutorialPerks", SendMessageOptions.DontRequireReceiver);
 		} else if (interfaceControlled == "Main Boost Interface") {
-			GameObject.Find ("TutorialController").SendMessage ("TutorialBoosts", SendMessageOptions.DontRequireReceiver);
+			tutorialController.SendMessage ("TutorialBoosts", SendMessageOptions.DontRequireReceiver);
 		} else if (interfaceControlled == "Main IAP Interface") {
-			GameObject.Find ("TutorialController").SendMessage ("TutorialDiamonds", SendMessageOptions.DontRequireReceiver);
+			tutorialController.SendMessage ("TutorialDiamonds", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 

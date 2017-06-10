@@ -42,7 +42,7 @@ public class ResetButtonScript : MonoBehaviour {
 			msgPanelController.SetBody ("Resetting the game will cause all upgrade levels to be reset back to 0.\n\n " +
 				"In exchange, you gain <color=#ff0000ff>" + gameController.FormatLong(redBooksGained) + 
 				"</color> Red Books (based on the total food you have produced, plus 1 book every 250 total upgrade levels).\n\n " +
-				"Each Red Book increase total production by 10% (plus bonuses), stacking additively.");
+				"Each Red Book increase total production by "+ (gameController.RedBookMultPerBook * 100).ToString("F2") + "% (plus bonuses), stacking additively.");
 		}
 	}
 

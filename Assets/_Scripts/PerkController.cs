@@ -149,11 +149,6 @@ public class PerkController : MonoBehaviour {
 		set {
 			level = value;
 			RefreshPanel ();
-
-			// activates reset button as soon as honey farm is purchased
-			if (id == 12 && level > 0) {
-//				RBScript.Activate ();
-			}
 		}
 	}
 
