@@ -50,7 +50,7 @@ public class TutorialController : MonoBehaviour {
 		if (allTutorialsViewed) {
 			this.enabled = false;
 		}
-		Debug.Log ("tutorial is enabled?" + this.enabled);
+//		Debug.Log ("tutorial is enabled?" + this.enabled);
 
 		if (!tutorialFlags["begin"]) {
 			TutorialBegin ();

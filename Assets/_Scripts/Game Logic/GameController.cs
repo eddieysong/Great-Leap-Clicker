@@ -205,14 +205,6 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	// updates the total multiplier
-//	public void CalcRedBookMultiplier ()
-//	{
-//		redBookMultiplier = 
-//		Debug.Log ("current multiplier: " + FormatDouble(redBookMultiplier));
-//		uiController.UpdateAllPanels ();
-//	}
-
 	// takes a double and returns a simplified string representation
 	public string FormatDouble (double number)
 	{
@@ -361,6 +353,15 @@ public class GameController : MonoBehaviour
 	}
 
 
+	// Reset Tutorial
+	public void ResetTutorial() {
+		tutorialController.enabled = true;
+		foreach (var key in new List<string> (tutorialController.TutorialFlags.Keys)) {
+			tutorialController.TutorialFlags [key] = false;
+		}
+	}
+
+
 	// save and load functions
 
 	public void Save()
@@ -456,7 +457,7 @@ public class GameController : MonoBehaviour
 	{
 		File.Delete (Application.persistentDataPath + "/PlayerData.dat");
 		Debug.Log ("Save game deleted!");
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		SceneManager.LoadScene("Title");
 	}
 
 	// the game saves data on pause/exit, loads on resume (except when game just started)

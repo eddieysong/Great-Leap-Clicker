@@ -32,14 +32,16 @@ public class TabController : MonoBehaviour {
 		image = GetComponent<Image> ();
 		buttonText = transform.Find ("Text").GetComponent<Text> ();
 		multiLevelButton = GameObject.Find ("Multiple Levels Button");
+
+		button.onClick.AddListener (ButtonClick);
+		scrollableInterfaces = GameObject.FindGameObjectsWithTag ("ScrollableInterface");
+		tabs = GameObject.FindGameObjectsWithTag ("Tabs");
 	}
 
 
 	// Use this for initialization
 	void Start () {
-		button.onClick.AddListener (ButtonClick);
-		scrollableInterfaces = GameObject.FindGameObjectsWithTag ("ScrollableInterface");
-		tabs = GameObject.FindGameObjectsWithTag ("Tabs");
+		
 //		foreach (GameObject tab in tabs) {
 //			Debug.Log (tab.name);
 //		}
@@ -50,6 +52,7 @@ public class TabController : MonoBehaviour {
 		gameController.PlayClickSound2 ();
 
 		foreach (GameObject sInterface in scrollableInterfaces) {
+			Debug.Log (sInterface.name);
 			if (sInterface.name != interfaceControlled) {
 				sInterface.SetActive (false);
 			} else {
