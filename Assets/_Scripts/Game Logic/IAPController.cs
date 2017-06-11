@@ -29,22 +29,22 @@ public class IAPController : MonoBehaviour, IStoreListener
 	// specific mapping to Unity Purchasing's AddProduct, below.
 
 	// 10 diamonds
-	public static string diamondPack1 = "diamondPack1";
+	public static string diamond_pack1 = "diamond_pack1";
 
 	// 55 diamonds
-	public static string diamondPack2 = "diamondPack2";
+	public static string diamond_pack2 = "diamond_pack2";
 
 	// 120 diamonds
-	public static string diamondPack3 = "diamondPack3";
+	public static string diamond_pack3 = "diamond_pack3";
 
 	// 260 diamonds
-	public static string diamondPack4 = "diamondPack4";
+	public static string diamond_pack4 = "diamond_pack4";
 
 	// 700 diamonds
-	public static string diamondPack5 = "diamondPack5";
+	public static string diamond_pack5 = "diamond_pack5";
 
 	// 1500 diamonds
-	public static string diamondPack6 = "diamondPack6";
+	public static string diamond_pack6 = "diamond_pack6";
 
 	// Apple App Store-specific product identifier for the subscription product.
 	private static string kProductNameAppleSubscription = "com.unity3d.subscription.new";
@@ -74,12 +74,12 @@ public class IAPController : MonoBehaviour, IStoreListener
 
 		// Add a product to sell / restore by way of its identifier, associating the general identifier
 		// with its store-specific identifiers.
-		builder.AddProduct (diamondPack1, ProductType.Consumable);
-		builder.AddProduct (diamondPack2, ProductType.Consumable);
-		builder.AddProduct (diamondPack3, ProductType.Consumable);
-		builder.AddProduct (diamondPack4, ProductType.Consumable);
-		builder.AddProduct (diamondPack5, ProductType.Consumable);
-		builder.AddProduct (diamondPack6, ProductType.Consumable);
+		builder.AddProduct (diamond_pack1, ProductType.Consumable);
+		builder.AddProduct (diamond_pack2, ProductType.Consumable);
+		builder.AddProduct (diamond_pack3, ProductType.Consumable);
+		builder.AddProduct (diamond_pack4, ProductType.Consumable);
+		builder.AddProduct (diamond_pack5, ProductType.Consumable);
+		builder.AddProduct (diamond_pack6, ProductType.Consumable);
 
 
 		// Kick off the remainder of the set-up with an asynchrounous call, passing the configuration 
@@ -194,32 +194,32 @@ public class IAPController : MonoBehaviour, IStoreListener
 	{
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		// A consumable product has been purchased by this user.
-		if (String.Equals (args.purchasedProduct.definition.id, diamondPack1, StringComparison.Ordinal)) {
+		if (String.Equals (args.purchasedProduct.definition.id, diamond_pack1, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 10 diamonds bought
 			gameController.IncreaseDiamonds(10);
 		}
-		else if (String.Equals (args.purchasedProduct.definition.id, diamondPack2, StringComparison.Ordinal)) {
+		else if (String.Equals (args.purchasedProduct.definition.id, diamond_pack2, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 55 diamonds bought
 			gameController.IncreaseDiamonds(55);
 		}
-		else if (String.Equals (args.purchasedProduct.definition.id, diamondPack3, StringComparison.Ordinal)) {
+		else if (String.Equals (args.purchasedProduct.definition.id, diamond_pack3, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 55 diamonds bought
 			gameController.IncreaseDiamonds(120);
 		}
-		else if (String.Equals (args.purchasedProduct.definition.id, diamondPack4, StringComparison.Ordinal)) {
+		else if (String.Equals (args.purchasedProduct.definition.id, diamond_pack4, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 55 diamonds bought
 			gameController.IncreaseDiamonds(260);
 		}
-		else if (String.Equals (args.purchasedProduct.definition.id, diamondPack5, StringComparison.Ordinal)) {
+		else if (String.Equals (args.purchasedProduct.definition.id, diamond_pack5, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 55 diamonds bought
 			gameController.IncreaseDiamonds(700);
 		}
-		else if (String.Equals (args.purchasedProduct.definition.id, diamondPack6, StringComparison.Ordinal)) {
+		else if (String.Equals (args.purchasedProduct.definition.id, diamond_pack6, StringComparison.Ordinal)) {
 			Debug.Log (string.Format ("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 			// 55 diamonds bought
 			gameController.IncreaseDiamonds(1500);

@@ -74,6 +74,42 @@ public class SettingsController : MonoBehaviour {
 		animator.SetTrigger ("Hide");
 	}
 
+
+	public void UnitConversions () {
+		MessagePanelController msgPanelController;
+
+		Debug.Log (GameObject.FindGameObjectWithTag ("MsgPanel"));
+		if (!GameObject.FindGameObjectWithTag ("MsgPanel")) {
+			if (msgPanelController = uiController.NewMessagePanel ()) {
+				Debug.Log ("msgPanel instantiated");
+				msgPanelController.SetTitle ("Unit Conversions");
+				msgPanelController.SetBody ("1000 g = 1 kg (kilogram)\n" +
+					"1000 kg = 1 t (ton)\n" +
+					"1000 t = 1 kt (kilo-ton)\n" +
+					"1000 kt = 1 Mt (Mega-ton)\n" +
+					"1000 Mt = 1 Gt (Giga-ton)\n" +
+					"1000 Gt = 1 Tt (Tera-ton)\n" +
+					"1000 Tt = 1 Pt (Peta-ton)\n" +
+					"1000 Pt = 1 Et (Exa-ton)\n" +
+					"1000 Et = 1 Zt (Zetta-ton)\n" +
+					"1000 Zt = 1 Yt (Yotta-ton)\n" +
+					"1000 Yt = 1 KY (Kilo-Yotta-ton)\n" +
+					"1000 KY = 1 MY (Mega-Yotta-ton)\n" +
+					"1000 MY = 1 GY (Giga-Yotta-ton)\n" +
+					"1000 GY = 1 TY (Tera-Yotta-ton)\n" +
+					"1000 TY = 1 PY (Peta-Yotta-ton)\n" +
+					"1000 PY = 1 EY (Exa-Yotta-ton)\n" +
+					"1000 EY = 1 ZY (Zetta-Yotta-ton)\n" +
+					"1000 ZY = 1 YY (Yotta-Yotta-ton)\n" +
+					"> 1000 YY : Displayed in Scientific Notation");
+				msgPanelController.SetIcon ("Sprites/UI/info", Color.yellow);
+				msgPanelController.SetButtonText ("Reset Tutorial");
+				msgPanelController.CallBackFunctionName = "ResetTutorial";
+			}
+		}
+		FadeOut ();
+	}
+
 	public void ResetTutorial () {
 		MessagePanelController msgPanelController;
 
