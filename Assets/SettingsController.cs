@@ -103,8 +103,7 @@ public class SettingsController : MonoBehaviour {
 					"1000 ZY = 1 YY (Yotta-Yotta-ton)\n" +
 					"> 1000 YY : Displayed in Scientific Notation");
 				msgPanelController.SetIcon ("Sprites/UI/info", Color.yellow);
-				msgPanelController.SetButtonText ("Reset Tutorial");
-				msgPanelController.CallBackFunctionName = "ResetTutorial";
+				msgPanelController.SetButtonText ("Understood!");
 			}
 		}
 		FadeOut ();

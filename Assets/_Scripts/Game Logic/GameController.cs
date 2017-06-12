@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour
 
 
 	// helper flag
-	private bool justStarted;
+	// private bool justStarted;
 
 
 	void Awake ()
@@ -64,10 +64,10 @@ public class GameController : MonoBehaviour
 	void Start()
 	{
 		// load game from file
-		Load ();
+		// Load ();
 
 		// flag to stop OnApplicationPause from loading the game again
-		justStarted = true;
+		// justStarted = true;
 
 		// starts auto-saving coroutine
 		StartCoroutine ("AutoSave");
@@ -466,8 +466,7 @@ public class GameController : MonoBehaviour
 		Debug.Log ("OnApplicationPause() called, isPaused = " + isPaused.ToString());
 		if (isPaused) {
 			Save ();
-		} else if (justStarted) {
-			justStarted = false;
+		} else {
 			Load ();
 		}
 	}
